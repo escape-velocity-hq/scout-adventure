@@ -50,7 +50,7 @@ Aim by dragging, with the arrow keys (Shift for finer), or with a controller's r
 
 ## Fountain Play
 
-The Fountains button on the Welcome card lets the Scouts run the pond fountains: Normal, Gentle (6 ft), Tall (25 ft), EXTREME (about 50 ft), or Off, with colour-changing lights that show best at night. Every pond changes together. Settings: `SC_FOUNTAINS` in `game/fountains.js`.
+The Fountains button on the Welcome card lets the Scouts run the pond fountains: Normal, Gentle (6 ft), Tall (25 ft), EXTREME (about 100 ft), or Off, with a choice of nozzle pattern (Wide Spray, Geyser, Three Tier, Crown Jets, Trumpet, Spire And Ring) and LED lights (white, blue, green, amber, red or colour change) that show best at night. Every pond changes together. Settings: `SC_FOUNTAINS` in `game/fountains.js`.
 
 ## Controllers
 
@@ -183,7 +183,7 @@ game/walk.js               first-person walking, the Scout chooser, the Map butt
 game/ride.js               golf carts, ATVs and the motorcycle
 game/bear.js               the bear, Bear Spray and the Bear Spray class
 game/fishing.js            first-person fishing with a rod (takes the place of the fishing in missions-water-sky.js)
-game/fountains.js          fountain play, up to 50 ft
+game/fountains.js          fountain play, up to 100 ft, nozzles, LED lights
 game/range.js              the BB gun range and the archery range
 game/landmarks.js          the well house
 game/gamepad.js            Xbox and PlayStation controllers
