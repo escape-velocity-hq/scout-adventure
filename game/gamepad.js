@@ -107,12 +107,13 @@
   }
   function stepMission(d) {
     const b = [...document.querySelectorAll('#scbar .scbtn')]; if (!b.length) return;
+    const g = document.getElementById('scgames'); if (g && g.offsetParent && !document.body.classList.contains('scgames-open')) g.click();
     const cur = b.findIndex(e => e === GP.hover);
     GP.mis = cur >= 0 ? (cur + d + b.length) % b.length : GP.mis < 0 ? (d > 0 ? 0 : b.length - 1) : (GP.mis + d + b.length) % b.length;
     jump(b[GP.mis]);
   }
   function stepCard() {
-    const b = [...document.querySelectorAll('#sccard button:not(.scclose), #sccard input')].filter(e => e.offsetParent !== null); if (!b.length) return;
+    const b = [...document.querySelectorAll('#sccard button:not(.scclose):not(.schide), #sccard input')].filter(e => e.offsetParent !== null); if (!b.length) return;
     const cur = b.findIndex(e => e === GP.hover); jump(b[cur >= 0 ? (cur + 1) % b.length : 0]);      // from the first button, unless the pointer is already on one
   }
   function travel(mx, my, dt) {      // move the look-at point over the ground: mx to the right, my away from the camera
