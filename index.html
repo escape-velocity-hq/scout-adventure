@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Scout Adventure | Aiken Basserie and Farm</title>
+<meta name="description" content="Scout Adventure: missions and games on the real farm in 3D.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=Cinzel:wght@700&display=swap">
+<link rel="stylesheet" href="css/farm.css">
+<link rel="stylesheet" href="css/scout.css">
+</head>
+<body>
+<canvas id="c" tabindex="0" aria-label="3D view of the farm"></canvas>
+<div id="north" title="North"><svg viewBox="-20 -20 40 40" aria-hidden="true"><g id="needle"><path d="M0 -15 L6 4 L0 0 L-6 4 Z" fill="#f2c230" stroke="#1c1a0c" stroke-width="1"/><text x="0" y="16" text-anchor="middle" font-family="Space Grotesk, Inter, sans-serif" font-size="10" font-weight="600" fill="currentColor">N</text></g></svg></div>
+
+<section class="panel" id="bar">
+ <div class="head"><span class="mark"><b>BEN</b>ch<b>M</b>ark</span><select id="lang" aria-label="Language"></select><button class="fold" data-fold="bar" aria-expanded="true">Hide</button></div>
+ <h1 style="margin-top:8px">Aiken Basserie and Farm</h1>
+ <div class="body">
+  <p class="sub" id="lede">717 Redds Branch Rd, Aiken SC. The whole farm as it stands, with Carolina Safari Suites on Pond 1.</p>
+  <h2 data-i18n="goto">Go To</h2>
+  <div class="chips" id="views"></div>
+  <h2 data-i18n="wkh">Walk Through</h2>
+  <div class="chips" id="wkc"></div>
+  <h2 data-i18n="lth">Lights</h2>
+  <div class="chips" id="ltc"></div>
+  <p class="sub" id="lthint" data-i18n="ltHint">Lights come on at dusk. Set the time to Night to see them.</p>
+  <h2 data-i18n="showh">Show</h2>
+  <div class="chips" id="toggles"></div>
+  <h2 data-i18n="snd">Sound</h2>
+  <div class="chips" id="sndc"></div>
+  <input type="range" id="sndvol" min="0" max="100" value="70" aria-label="Volume">
+  <p class="hint" data-i18n="sndNote">Sounds are generated in your browser.</p>
+  <p class="hint" data-i18n="hint">Drag to look around.</p>
+ </div>
+</section>
+
+<section class="panel" id="edit">
+ <div class="head"><h1 data-i18n="scene">Scene</h1><button class="fold" data-fold="edit" aria-expanded="true">Hide</button></div>
+ <div class="body">
+  <h2 data-i18n="tod">Time Of Day</h2>
+  <p id="todinfo" class="read"></p>
+  <input type="range" id="tod" min="0" max="24" step="0.25" value="15" aria-label="Time of day">
+  <div class="chips" id="todp" style="margin-top:8px"></div>
+  <h2 id="dirh" data-keep="1" data-i18n="dirs">Directions</h2>
+  <p id="dirto" data-keep="1" class="read" style="margin-bottom:2px"></p>
+  <p id="dirsum" data-keep="1" class="read"><strong></strong></p>
+  <ol id="dirsteps" data-keep="1"></ol>
+  <div class="chips" id="dirbtn" data-keep="1"></div>
+  <h3 id="diralth" data-keep="1" data-i18n="altH">If You Miss The Left Turn</h3>
+  <ol id="diralt" data-keep="1"></ol>
+  <h2 id="trh" data-i18n="trh">Trace A Route</h2>
+  <p id="trinfo" class="read"></p>
+  <div class="chips" id="trbtn"></div>
+  <p id="trcopied" role="status"></p>
+  <textarea id="trout" readonly hidden aria-label="Traced route to paste into the chat"></textarea>
+  <h2 id="enth" data-i18n="ent">Entrance Gateway</h2>
+  <div class="chips" id="entopt" role="group" aria-label="Entrance gateway option"></div>
+  <p id="entinfo" class="read"></p>
+  <h2 data-i18n="fou">Fountains</h2>
+  <div class="chips" id="fpond" role="group" aria-label="Pond"></div>
+  <h3 data-i18n="many">How Many</h3><div class="chips" id="fcount"></div>
+  <h3 data-i18n="size">Size</h3><div class="chips" id="fhp"></div>
+  <h3 data-i18n="pat">Spray Pattern</h3><div class="chips" id="fpat"></div>
+  <h3 data-i18n="lights">Lights</h3><div class="chips" id="flight"></div>
+  <p id="finfo" class="read"></p>
+  <button class="btn primary" id="copy" data-i18n="copy">Copy My Choices</button>
+  <p id="copied" role="status"></p>
+  <textarea id="out" readonly hidden aria-label="Choices to paste into the chat"></textarea>
+  <p class="hint" id="fsrc"></p>
+ </div>
+</section>
+<div id="walkbar" hidden><canvas id="wkmap" aria-label="Floor plan: tap a dot to go there"></canvas><div class="wkrow"><button id="wkback" class="chip" data-i18n="wkBack">Back</button><span id="wkname" role="status"></span><button id="wknext" class="chip on" data-i18n="wkNext">Next</button><button id="wkexit" class="chip" data-i18n="wkExit">Exit</button></div></div>
+<div id="toast" role="status" hidden></div>
+<div id="sndhint" role="status" hidden></div>
+<div id="load" data-i18n="loading">Loading the farm…</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script>window.ABF_MODE='scouts';</script>
+<script src="engine/i18n.js"></script>
+<script src="engine/farm-engine.js"></script>
+<script src="game/scout-core.js"></script>
+<script src="game/missions-explore.js"></script>
+<script src="game/missions-water-sky.js"></script>
+<script src="game/missions-camp-fire.js"></script>
+<script src="game/missions-games.js"></script>
+
+</body>
+</html>
