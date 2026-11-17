@@ -11,12 +11,12 @@ It runs in a web browser on a phone, tablet or laptop. Nothing to install.
 | Compass Course | Follow a bearing and a distance from a start flag | Bearings and pacing |
 | Follow The Raindrop | Tap the ground and watch the rain run downhill | Watersheds |
 | Wildlife Spotter | Find seven animals hidden around the farm | Local wildlife |
-| Catch A Bass | Cast, wait for the bite, reel in time. About one bite in four is a trophy fish. | Patience, catch and release |
+| Catch A Bass | First-person fishing with a rod: wind up and cast, set the hook, and play the fish. About one bite in four is a trophy. | Patience, catch and release |
 | Night Sky Hunt | Find the Big Dipper, North Star, Cassiopeia, Orion and the farm's own star pictures | Finding north at night |
 | Pitch Your Camp | Place tents, a dining fly and a fire ring; get the site scored | Campsite selection |
 | Fire Class | Answer Ember The Owl's questions and build a safe campfire step by step | Fire safety |
 | Paintball Range | Splat pop-up targets against the clock (targets only, never people) | Aim, range safety |
-| Horseshoes | Two presses per throw: aim, then power | Just fun |
+| Horseshoes | Press to set the aim, then hold to build the power and let go to throw | Just fun |
 
 Every mission earns points for the patrol that is playing. The Scoreboard ranks the patrols.
 
@@ -58,15 +58,26 @@ Touch and mouse keep working; moving the mouse or touching the screen puts the p
 
 Each mission has a badge, earned the first time a patrol scores in it. The Home card shows how many the patrol holds, and the Badges card shows all ten and the patrol's standing (Trail Scout, Farm Ranger, Pond Master, Basserie Legend). These are the farm's own badges, not Scouting America ranks or merit badges.
 
+## Fishing With A Rod
+
+Fishing is in first person, from the bank of any pond or from the lower or upper deck of the Fishing Lounge. Walk to the water and press Use ("Fish Here"), or by the lounge ("Fish From The Lounge"), or press Catch A Bass to be walked to the nearest bank.
+
+- **Cast:** hold the big button (or Space, or A on a controller) to wind up, and let go. The lure flies in a real arc; a longer wind-up carries it farther, up to about 26 metres of throw.
+- **Wait:** the fish are the ones swimming in the pond. The nearest one notices the lure and swims to it. Holding the button reels the lure slowly in.
+- **Strike:** when it bites, press to set the hook.
+- **Fight:** hold to reel, let go to give line. A fish's pull comes from its weight, worked out from its length. It runs and rests. Reel against a strong run and the tension passes what the line can take and it snaps; leave the line slack and the hook pulls out; let it take all 45 metres of line and it breaks off. Tension tires the fish.
+
+Tackle changes the physics: Live Bait doubles how far away a fish notices the lure, Braided Line takes 1.8 times the tension, and the Heavy Rod reels 35 percent harder. All the numbers are in `SC_FISHING` at the top of `game/fishing.js`.
+
 ## Trophy Fish
 
-In Catch A Bass any of the nine kinds of fish stocked in the ponds can bite: largemouth bass, F1 tiger bass, bream, redear sunfish, warmouth, channel catfish, tilapia, butterfly koi and grass carp. About one bite in four is a "BIG BITE", and the last cast of a round always is if the round has had none. A trophy is 8 to 22 percent longer than the biggest of its kind swimming in the ponds and scores 100 bonus points. The game remembers each patrol's biggest catch. The settings are at the top of `game/missions-water-sky.js` (`SC_TROPHY`).
+In Catch A Bass any of the nine kinds of fish stocked in the ponds can bite: largemouth bass, F1 tiger bass, bream, redear sunfish, warmouth, channel catfish, tilapia, butterfly koi and grass carp. About one bite in four is a "BIG BITE", A trophy is 8 to 22 percent longer than the biggest of its kind swimming in the ponds and scores 100 bonus points. The game remembers each patrol's biggest catch. The settings are at the top of `game/missions-water-sky.js` (`SC_TROPHY`).
 
 ## Monster Fish
 
 Each pond holds one abnormally large fish (1.25 to 1.75 times the biggest ordinary fish of its kind), with a name. Every 9 to 17 seconds one of them leaps and comes down with a big splash, and the game says which one. Settings are at the top of `game/monsters.js`.
 
-To land one, a patrol needs the Heavy Rod, the Braided Line and a Monster Lure, and has to cast close to where the monster is swimming. The fight takes four timed pulls; two mistakes and it is gone, with the lure. Landing one pays 60 tokens. Settings: `SC_MONSTER_CATCH` in `game/missions-water-sky.js`.
+To land one, a patrol needs the Heavy Rod, the Braided Line and a Monster Lure, and has to cast close to where the monster is swimming. It weighs many times what an ordinary fish does, so it has to be played patiently: reel only while it rests. Snap the line or lose the hook and the lure goes with it. Landing one pays 60 tokens. Settings: `SC_MONSTER_CATCH` in `game/missions-water-sky.js`.
 
 ## Tokens, Energy And The Shop
 
@@ -79,7 +90,7 @@ Tokens are play money. They are earned by playing and cannot be bought.
 | A trophy fish | 5 more |
 | Landing a monster | 60 |
 
-Starting a mission uses 12 energy and each cast uses 3. Running out never stops the game: a tired patrol earns half the tokens until it eats or drinks.
+Starting a mission (or a fishing session) uses 12 energy and each cast uses 3. Running out never stops the game: a tired patrol earns half the tokens until it eats or drinks.
 
 | Vending Machine | Tokens | Gives |
 |---|---|---|
@@ -151,6 +162,7 @@ game/tokens.js             tokens, energy, the vending machine and the tackle sh
 game/walk.js               first-person walking, the Scout chooser, the Map button
 game/ride.js               golf carts, ATVs and the motorcycle
 game/bear.js               the bear, Bear Spray and the Bear Spray class
+game/fishing.js            first-person fishing with a rod (takes the place of the fishing in missions-water-sky.js)
 game/landmarks.js          the well house
 game/gamepad.js            Xbox and PlayStation controllers
 scene.json, ground_tex.jpg the farm itself (generated from the farm model; do not edit by hand)

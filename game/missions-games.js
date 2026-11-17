@@ -33,7 +33,7 @@ SC_MISSIONS.push({
 SC_MISSIONS.push({
   id: 'shoes', name: 'Horseshoes',
   start() {
-    this.n = 6; this.pts = 0; this.st = 'aim'; this.fly = null; const s = scOpenSpot(); this.x = s[0]; this.z = s[1]; this.y = scY(s[0], s[1]); this.d = 30 / SCFT;
+    this.n = 6; this.pts = 0; this.st = 'aim'; this.fly = null; this.ch = null; const s = scOpenSpot(); this.x = s[0]; this.z = s[1]; this.y = scY(s[0], s[1]); this.d = 30 / SCFT;
     const M = c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.8 }); this.sy = scY(this.x, this.z - this.d); const pit = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.06, 1.3), M(0xd8c79a)); pit.position.set(this.x, this.sy + 0.03, this.z - this.d); SC.grp.add(pit);
     const st = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.45, 8), M(0xcccccc)); st.position.set(this.x, this.sy + 0.22, this.z - this.d); st.rotation.x = 0.1; SC.grp.add(st);
     this.arrow = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.5, 8), new THREE.MeshBasicMaterial({ color: 0xf2c230 })); this.arrow.rotation.x = -Math.PI / 2; SC.grp.add(this.arrow);
@@ -42,21 +42,31 @@ SC_MISSIONS.push({
   },
   show(extra) {
     const b = this.n > 0 ? [{ label: this.st === 'aim' ? 'Set My Aim' : 'Throw!', big: true, go: true, fn: () => this.tap() }] : [{ label: 'Play Again', fn: () => scStart(this) }, { label: 'Home', go: true, fn: scHome }];
-    scCard('Horseshoes', (extra || []).concat([this.n > 0 ? (this.st === 'aim' ? 'The yellow arrow swings left and right. Press when it points at the stake.' : 'The green bar grows and shrinks. Press when it reaches the stake.') : '', 'Shoes left: ' + this.n + '. Points: ' + this.pts, { small: 'A ringer (around the stake) is 3. Within 6 inches is 1.' }]).filter(Boolean), this.st === 'fly' ? [] : b);
+    scCard('Horseshoes', (extra || []).concat([this.n > 0 ? (this.st === 'aim' ? 'The yellow arrow swings left and right. Press when it points at the stake.' : 'You set the power. Hold the button down: the green bar grows the longer you hold. Let go when it reaches the stake.') : '', 'Shoes left: ' + this.n + '. Points: ' + this.pts, { small: 'A ringer (around the stake) is 3. Within 6 inches is 1.' }]).filter(Boolean), this.st === 'fly' ? [] : b);
+    if (this.st === 'power' && this.n > 0) this.powerButton();
   },
+  // the power is the player's: hold to build it, let go to throw. (A controller or the keyboard presses once to start and again to throw.)
+  powerButton() {
+    const e = document.querySelector('#sccard .scrow .scbtn'); if (!e) return; e.textContent = 'Hold To Throw'; e.style.touchAction = 'none'; let ptr = 0;
+    e.onclick = () => { if (performance.now() - ptr < 500) return; if (this.ch) this.release(); else this.hold() };
+    e.onpointerdown = ev => { ptr = performance.now(); ev.preventDefault(); this.hold() }; e.onpointerup = e.onpointercancel = e.onpointerleave = () => { if (this.ch) { ptr = performance.now(); this.release() } };
+  },
+  hold() { if (this.st === 'power' && !this.ch) { this.ch = SC.t; scBeep(240, 0.05) } },
+  release() { if (this.st !== 'power' || !this.ch) return; if (SC.t - this.ch < 0.12) { this.ch = null; return } this.tap() },
   shoe() { const sh = new THREE.Shape(); sh.absarc(0, 0, 0.1, Math.PI * 0.15, Math.PI * 0.85, true); sh.absarc(0, 0, 0.07, Math.PI * 0.85, Math.PI * 0.15, false); const m = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.015, bevelEnabled: false }), new THREE.MeshStandardMaterial({ color: 0xb9bcc2, metalness: 0.7, roughness: 0.4 })); m.rotation.x = -Math.PI / 2; return m },
   tap() {
     if (this.n <= 0 || this.st === 'fly') return;
-    if (this.st === 'aim') { this.aim = this.cur_aim; this.st = 'power'; this.bar.visible = true; return this.show() }
-    const pw = this.cur_pw; this.bar.visible = false; this.st = 'fly'; this.n--; const tx = this.x + Math.sin(this.aim) * this.d * pw, tz = this.z - Math.cos(this.aim) * this.d * pw; this.fly = { m: this.shoe(), t0: SC.t, T: 1.1, tx, tz }; SC.grp.add(this.fly.m); scBeep(300, 0.1); this.show();
+    if (this.st === 'aim') { this.aim = this.cur_aim; this.st = 'power'; this.ch = null; this.bar.visible = true; return this.show() }
+    if (!this.ch) return this.hold();
+    const pw = this.cur_pw; this.ch = null; this.bar.visible = false; this.st = 'fly'; this.n--; const tx = this.x + Math.sin(this.aim) * this.d * pw, tz = this.z - Math.cos(this.aim) * this.d * pw; this.fly = { m: this.shoe(), t0: SC.t, T: 1.1, tx, tz }; SC.grp.add(this.fly.m); scBeep(300, 0.1); this.show();
   },
   tick(t) {
-    this.cur_aim = Math.sin(t * 1.7) * 0.09; this.cur_pw = 0.55 + 0.6 * (0.5 + 0.5 * Math.sin(t * 2.3));
+    this.cur_aim = Math.sin(t * 1.7) * 0.09; this.cur_pw = this.ch ? Math.min(1.4, 0.25 + (t - this.ch) * 0.5) : 0.25;      // a quarter of the way at first touch, then half the distance again each second, up to well past the stake
     if (this.arrow) { const a = this.st === 'aim' ? this.cur_aim : (this.aim || 0); this.arrow.position.set(this.x + Math.sin(a) * 2.2, this.y + 0.35, this.z - Math.cos(a) * 2.2); this.arrow.rotation.z = -a; this.arrow.visible = this.st !== 'fly' && this.n > 0 }
     if (this.bar && this.bar.visible) { const L = this.d * this.cur_pw, a = this.aim; this.bar.scale.z = L; this.bar.rotation.y = -a; this.bar.position.set(this.x + Math.sin(a) * L / 2, this.y + 0.12, this.z - Math.cos(a) * L / 2) }
     const f = this.fly; if (!f) return; const k = Math.min(1, (t - f.t0) / f.T); f.m.position.set(this.x + (f.tx - this.x) * k, this.y + 1 + (scY(f.tx, f.tz) - this.y - 1) * k + Math.sin(k * Math.PI) * 2.6, this.z + (f.tz - this.z) * k); f.m.rotation.z = k * 12;
     if (k >= 1) { this.fly = null; f.m.rotation.z = Math.random() * 6; f.m.position.y = scY(f.tx, f.tz) + 0.07; const d = Math.hypot(f.tx - this.x, f.tz - (this.z - this.d)), inch = d * 39.37; let msg, p = 0; if (inch <= 3) { p = 3; msg = 'RINGER! 3 points!'; scWin() } else if (inch <= 6) { p = 1; msg = 'Close! Within 6 inches: 1 point.'; scWin() } else { msg = 'That one landed ' + (inch < 36 ? Math.round(inch) + ' inches' : (d * SCFT).toFixed(1) + ' feet') + ' from the stake.'; scMiss() }
       this.pts += p; this.st = 'aim'; if (this.n <= 0) { scAward('shoes', this.pts * 25); msg += ' Game over: ' + this.pts + ' points (' + this.pts * 25 + ' on the scoreboard).' } this.show([msg]) }
   },
-  stop() { this.fly = null; this.arrow = null; this.bar = null }
+  stop() { this.fly = null; this.arrow = null; this.bar = null; this.ch = null }
 });

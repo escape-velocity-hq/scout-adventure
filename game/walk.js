@@ -87,6 +87,7 @@ function scwTick(t, dt) {
     // slide along whatever is in the way
     if (scwCanGo(x, z, x + dx, z + dz, 0.55)) { SCW.x += dx; SCW.z += dz } else if (scwCanGo(x, z, x + dx, z, 0.55)) SCW.x += dx; else if (scwCanGo(x, z, x, z + dz, 0.55)) SCW.z += dz;
     const d = Math.hypot(SCW.x - x, SCW.z - z); SCW.bob += d * 2.1; SCW.walked += d;
+    if (d > 0 && SCW.homeCard) { SCW.homeCard = false; const c = document.getElementById('sccard'); if (c && c.querySelector('.scclose')) c.hidden = true }      // setting off puts the Welcome card away
     if (SCW.walked >= SCW.stepEnergy) { SCW.walked -= SCW.stepEnergy; if (typeof scUseEnergy === 'function') scUseEnergy(1) }
   }
   if (typeof scRideTick === 'function') scRideTick(t, dt, ix, iy);
@@ -119,6 +120,7 @@ scHome = function () {
   for (const p of c.querySelectorAll('p')) if (/^You are playing as: /.test(p.textContent)) p.textContent = p.textContent.replace('You are playing as: ', 'You are playing as: ' + a.icon + ' the ' + a.name + ' of ');
   const e = scEl('button', 'scbtn', 'Change Scout'); e.onclick = scAvatarCard; row.insertBefore(e, row.children[1] || null);
   const go = scEl('button', 'scbtn go', 'Let\u2019s Go'); go.title = 'Put this card away. The Home button brings it back.'; go.onclick = () => { c.hidden = true }; row.appendChild(go);
+  const x = scEl('button', 'scclose', '\u00D7'); x.title = 'Hide this card. The Home button brings it back.'; x.setAttribute('aria-label', 'Hide this card'); x.onclick = () => { c.hidden = true }; c.insertBefore(x, c.firstChild); SCW.homeCard = true;
 };
 const scInitW0 = scInit;
 scInit = function () {
