@@ -1,6 +1,6 @@
 # Scout Adventure At Aiken Basserie
 
-A 3D game for visiting Scouts, played on the real farm at 717 Redds Branch Rd, Aiken SC.
+A 3D game for the Scouts visiting on November 29, 2026, played on the real farm at 717 Redds Branch Rd, Aiken SC.
 It runs in a web browser on a phone, tablet or laptop. Nothing to install.
 
 ## Missions
@@ -17,6 +17,8 @@ It runs in a web browser on a phone, tablet or laptop. Nothing to install.
 | Fire Class | Answer Ember The Owl's questions and build a safe campfire step by step | Fire safety |
 | Paintball Range | Splat pop-up targets against the clock (targets only, never people) | Aim, range safety |
 | Horseshoes | Press to set the aim, then hold to build the power and let go to throw | Just fun |
+| BB Gun Range | Agree to the range rules, then ten shots at paper targets 15 feet away | Range safety, sight picture |
+| Archery Range | Choose an arrow tip, then twelve arrows at round targets and foam animals | Range safety, holding high for distance |
 
 Every mission earns points for the patrol that is playing. The Scoreboard ranks the patrols.
 
@@ -33,6 +35,18 @@ Two golf carts, two ATVs and a motorcycle are parked on the parking pad. Walk up
 A cartoon bear roams the farm. If it sees a Scout on foot within 45 metres it stares, then charges, and it is faster than a Scout can jog. If it reaches the Scout it takes 10 tokens and wanders off; nobody is hurt. A Scout on a vehicle, on the Map or in a mission is left alone.
 
 Bear Spray (Camp Store, 6 tokens for three bursts) stops it, used the way the real thing is taught: keep it within reach, take the safety clip off, aim slightly down at the bear, and spray when it is 30 to 60 feet away. In the game the Bear Spray button (or F, or Y on a controller) takes the clip off on the first press and sprays on the next. The first good spray earns 10 tokens. The Bear Spray Class card lists the steps, which follow the guidance published by Yellowstone Forever, Be Bear Aware and REI. Settings: `SC_BEAR` in `game/bear.js`.
+
+## The Ranges
+
+Both ranges are shot in first person from a firing line on open ground, at targets only, and both open on the range rules, which the Scout has to agree to before anything will fire.
+
+Every BB and every arrow is flown as a real projectile: it leaves at its own speed, gravity pulls it down, the air slows it and the wind pushes it sideways. A BB (350 feet a second) drops under an inch over 15 feet. An arrow at full draw (about 150 feet a second) falls about a metre below its line of aim by the time it reaches the 20 metre target, so far targets need the cross held high, and the game says how far off each shot landed.
+
+- **BB Gun Range:** five paper targets at 15 feet, ten shots, scored by ring.
+- **Archery Range:** round targets at 10, 15 and 20 metres, and three foam animals (turkey, deer, bear) scored 10 for the centre of the vital ring, 8 inside it and 5 for a body hit. Hold the button to draw, let go to loose.
+- **Arrow tips:** Field Point, Bullet Point, Blunt and Judo Point, each with its own drag; blunts and judo points bounce off instead of sticking. Broadheads are hunting tips, are not used on a Scout range, and are not offered.
+
+Aim by dragging, with the arrow keys (Shift for finer), or with a controller's right stick. Settings: `SC_RANGE` at the top of `game/range.js`.
 
 ## Fountain Play
 
@@ -60,7 +74,7 @@ Touch and mouse keep working; moving the mouse or touching the screen puts the p
 
 ## Badges
 
-Each mission has a badge, earned the first time a patrol scores in it. The Home card shows how many the patrol holds, and the Badges card shows all ten and the patrol's standing (Trail Scout, Farm Ranger, Pond Master, Basserie Legend). These are the farm's own badges, not Scouting America ranks or merit badges.
+Each mission has a badge, earned the first time a patrol scores in it. The Home card shows how many the patrol holds, and the Badges card shows all twelve and the patrol's standing (Trail Scout, Farm Ranger, Pond Master, Basserie Legend). These are the farm's own badges, not Scouting America ranks or merit badges.
 
 ## Fishing With A Rod
 
@@ -120,7 +134,7 @@ Patrol name, troop number, each patrol's best score per mission, its biggest cat
 
 Suitable for all ages. This is the farm's own description, not an official ESRB or PEGI rating.
 
-- Nothing violent. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.
+- Nothing violent. The paintball, BB gun and archery ranges shoot at targets only (paper, round targets and foam animal targets), never at people or real animals, and open with the range safety rules. Fishing is catch and release.
 - A cartoon bear roams the farm. If it reaches a Scout on foot it takes some play tokens and wanders off. Nobody is hurt, and a class teaches how Bear Spray is really used.
 - No ads, no purchases, no chat, no accounts and no links to other websites.
 - The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.
@@ -168,6 +182,7 @@ game/ride.js               golf carts, ATVs and the motorcycle
 game/bear.js               the bear, Bear Spray and the Bear Spray class
 game/fishing.js            first-person fishing with a rod (takes the place of the fishing in missions-water-sky.js)
 game/fountains.js          fountain play, up to 50 ft
+game/range.js              the BB gun range and the archery range
 game/landmarks.js          the well house
 game/gamepad.js            Xbox and PlayStation controllers
 scene.json, ground_tex.jpg the farm itself (generated from the farm model; do not edit by hand)

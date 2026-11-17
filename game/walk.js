@@ -14,6 +14,7 @@ const SCW = {
   stepEnergy: 30,         // metres on foot for one point of energy
   on: false, want: true, x: 0, z: 0, yaw: 0, pitch: 0, keys: {}, stick: [0, 0], pad: [0, 0], bob: 0, walked: 0, grp: null, solids: null, ride: null, v: 0
 };
+const SC_VISIT = 'See You On Nov 29, 2026';      // the day the Scouts visit: shown on the Welcome card and under the welcome banner
 // the Scout a patrol plays as: an emblem and a name, shown on the cards
 const SC_AVATARS = [
   { id: 'eagle', name: 'Eagle', icon: '🦅' }, { id: 'wolf', name: 'Wolf', icon: '🐺' }, { id: 'fox', name: 'Fox', icon: '🦊' }, { id: 'owl', name: 'Owl', icon: '🦉' },
@@ -70,7 +71,7 @@ function scwMap() {      // the overhead view, with a flag where the Scout is st
   if (!SCW.grp) { SCW.grp = new THREE.Group(); scene.add(SCW.grp) } while (SCW.grp.children.length) SCW.grp.remove(SCW.grp.children[0]);
   const keep = SC.grp; SC.grp = SCW.grp; const a = scAvatar(); scFlag(SCW.x, SCW.z, 0xf2c230, 'You are here'); SC.grp = keep; SCW.grp.visible = true; scwButton();
 }
-function scwButton() { const b = document.getElementById('scwmap'); if (b) { b.textContent = SCW.on ? 'Map' : 'Walk'; b.hidden = !!SC.cur } const u = document.getElementById('scwuse'); if (u && !SCW.on) u.hidden = true }
+function scwButton() { const b = document.getElementById('scwmap'); if (b) { b.textContent = SCW.on ? 'Map' : 'Walk'; b.classList.toggle('go', !SCW.on); b.hidden = !!SC.cur } const u = document.getElementById('scwuse'); if (u && !SCW.on) u.hidden = true }
 
 // ---- every frame
 function scwInput() {      // where the Scout wants to go: x to the right, y ahead, each from -1 to 1
@@ -95,8 +96,17 @@ function scwTick(t, dt) {
 }
 
 // ---- controls: keys, and a stick for touch screens
-window.addEventListener('keydown', e => { if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '')) return; const k = e.key.length === 1 ? e.key.toLowerCase() : e.key; SCW.keys[k] = true; if (SCW.on && /^Arrow/.test(k)) e.preventDefault(); if (SCW.on && k === 'e' && typeof scwUse === 'function') scwUse() });
-window.addEventListener('keyup', e => { const k = e.key.length === 1 ? e.key.toLowerCase() : e.key; SCW.keys[k] = false });
+// The number pad walks too, with Num Lock on or off: 8 4 6 2 are the arrows.
+function scwKey(e) { const pad = { Numpad8: 'ArrowUp', Numpad2: 'ArrowDown', Numpad4: 'ArrowLeft', Numpad6: 'ArrowRight' }[e.code]; return pad || (e.key.length === 1 ? e.key.toLowerCase() : e.key) }
+// A walk key pressed when the Scout is not on foot: from the Map it drops back to the ground; in a mission it says how to get back.
+function scwWantsToWalk(k) {
+  if (SCW.on || !SCW.ready) return; const fishing = typeof SCF !== 'undefined' && SCF.on, ranging = typeof SCR !== 'undefined' && SCR.on;
+  if (ranging && /^Arrow/.test(k)) return;      // on a range the arrow keys aim
+  if (SC.cur) { const now = performance.now(); if (now - (SCW.told || 0) > 4000) { SCW.told = now; toast(fishing ? 'You are fishing, so you stand still. Press Done Fishing (or Home) to walk again.' : ranging ? 'You are on the firing line. Press Done (or Home) to walk again.' : 'This mission is played from above. Press Home to walk again.') } return }
+  if (!scAvatar()) return; SCW.want = true; scwEnter();
+}
+window.addEventListener('keydown', e => { if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '')) return; const k = scwKey(e); SCW.keys[k] = true; if (/^(w|a|s|d|ArrowUp|ArrowDown|ArrowLeft|ArrowRight)$/.test(k)) scwWantsToWalk(k); if (SCW.on && /^Arrow/.test(k)) e.preventDefault(); if (SCW.on && k === 'e' && typeof scwUse === 'function') scwUse() });
+window.addEventListener('keyup', e => { SCW.keys[scwKey(e)] = false });
 window.addEventListener('blur', () => { SCW.keys = {}; SCW.stick = [0, 0] });
 function scwStick() {
   const base = scEl('div'); base.id = 'scwstick'; base.setAttribute('aria-label', 'Walk: drag to move'); const nub = scEl('div'); nub.id = 'scwnub'; base.appendChild(nub); document.body.appendChild(base);
@@ -116,6 +126,7 @@ scHome = function () {
   const was = SCW.on; if (was) scwLeave(); scHomeW0(); if (SCW.want && SCW.ready) scwEnter(); else scwButton();
   const c = document.getElementById('sccard'), row = c && c.querySelector('.scrow'), a = scAvatar(); if (!row) return;
   if (!a) return scAvatarCard();      // first, choose a Scout
+  const h2 = c.querySelector('h2'); if (h2 && /^Welcome/.test(h2.textContent)) h2.textContent = h2.textContent + ' ' + SC_VISIT;
   const small = c.querySelector('.scsmall'); if (small) small.textContent = 'Walk with W A S D, the arrow keys, the on-screen stick or a controller. Drag to look around. The Map button shows the whole farm.';
   for (const p of c.querySelectorAll('p')) if (/^You are playing as: /.test(p.textContent)) p.textContent = p.textContent.replace('You are playing as: ', 'You are playing as: ' + a.icon + ' the ' + a.name + ' of ');
   const e = scEl('button', 'scbtn', 'Change Scout'); e.onclick = scAvatarCard; row.insertBefore(e, row.children[1] || null);
@@ -130,3 +141,6 @@ scInit = function () {
   const u = scEl('button', 'scbtn go'); u.id = 'scwuse'; u.hidden = true; document.body.appendChild(u); scwStick();
   setTimeout(() => { SCW.ready = true; if (!SC.cur && SCW.want) scwEnter() }, 2400);      // a look at the farm from above, then down to the ground
 };
+// the welcome banner at the Fishing Lounge gets the date under it
+const scWelcomeW0 = scWelcome;
+scWelcome = function () { scWelcomeW0(); if (!SC.banner) return; const l = scLabel('SEE YOU NOV 29', '#f2c230'); l.scale.set(12, 2.25, 1); l.position.y = 6.6; SC.banner.add(l) };

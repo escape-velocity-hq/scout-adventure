@@ -35,10 +35,14 @@ function scFishPondAt(x, z) { for (const p of S.ponds || []) if (!p.unfinished &
 function scFishWater(x, z, yaw, deck) {      // how much open water lies ahead: 0 to 5. Water under the deck itself does not count.
   let n = 0; for (let k = 4; k <= 20; k += 4) { const px = x + Math.sin(yaw) * k, pz = z + Math.cos(yaw) * k; if (scFishPondAt(px, pz) && !(deck && px > deck[0] && px < deck[1] && pz > deck[2] && pz < deck[3])) n++ } return n;
 }
-function scFishBest(pts, deck) {      // of these places to stand, the one with the most open water in front of it, and which way to face
-  let best = null; for (const q of pts) for (let a = 0; a < 6.283; a += 0.3927) { const n = scFishWater(q[0], q[1], a, deck) + scFishWater(q[0], q[1], a + 0.3, deck) + scFishWater(q[0], q[1], a - 0.3, deck); if (!best || n > best.n) best = { x: q[0], z: q[1], yaw: a, n } } return best;
+function scFishBest(pts, deck, eye) {      // of these places to stand, the one with the most open water in front of it, and which way to face
+  const all = []; for (const q of pts) for (let a = 0; a < 6.283; a += 0.3927) all.push({ x: q[0], z: q[1], yaw: a, n: scFishWater(q[0], q[1], a, deck) + scFishWater(q[0], q[1], a + 0.3, deck) + scFishWater(q[0], q[1], a - 0.3, deck) });
+  all.sort((a, b) => b.n - a.n); if (!all.length) return null; if (eye === undefined) return all[0];
+  // on a deck: of the places with nearly as much water, one with no post or rail in front of the eyes
+  const solids = picks.filter(m => m.visible && m.userData && m.userData.rng), clear = c => { for (const da of [-0.25, 0, 0.25]) { scwRay.set(new THREE.Vector3(c.x, eye, c.z), new THREE.Vector3(Math.sin(c.yaw + da), -0.08, Math.cos(c.yaw + da)).normalize()); scwRay.near = 0.05; scwRay.far = 5; if (scwRay.intersectObjects(solids, false).length) return false } return true };
+  for (const c of all) { if (c.n < all[0].n - 2) break; if (clear(c)) return c } return all[0];
 }
-function scFishDeck(x0, x1, z0, z1, top, name) { const pts = []; for (let x = x0 + 0.5; x <= x1 - 0.5; x += 0.9) { pts.push([x, z0 + 0.5], [x, z1 - 0.5]) } for (let z = z0 + 0.5; z <= z1 - 0.5; z += 0.9) { pts.push([x0 + 0.5, z], [x1 - 0.5, z]) } const b = scFishBest(pts, [x0, x1, z0, z1]); return b && b.n ? { x: b.x, z: b.z, yaw: b.yaw, y: top + SCW.eye, name, deck: true, n: b.n } : null }
+function scFishDeck(x0, x1, z0, z1, top, name) { const pts = []; for (let x = x0 + 0.5; x <= x1 - 0.5; x += 0.9) { pts.push([x, z0 + 0.5], [x, z1 - 0.5]) } for (let z = z0 + 0.5; z <= z1 - 0.5; z += 0.9) { pts.push([x0 + 0.5, z], [x1 - 0.5, z]) } const b = scFishBest(pts, [x0, x1, z0, z1], top + SCW.eye); return b && b.n ? { x: b.x, z: b.z, yaw: b.yaw, y: top + SCW.eye, name, deck: true, n: b.n } : null }
 // the two decks of the Fishing Lounge, measured from the farm model
 const scFishLower = () => scFishDeck(-81.1, -73.93, 0.57, 5.94, 96.7, 'the lower deck of the Fishing Lounge');
 const scFishUpper = () => scFishDeck(-86.3, -81.74, -4.27, 5.8, 96.99, 'the upper deck of the Fishing Lounge');

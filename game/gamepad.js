@@ -54,7 +54,7 @@
       ['D-pad', 'On foot: move the pointer. On the Map: travel.'],
       ['Right stick', 'Turn and tilt the view'],
       [n.lt + ' / ' + n.rt, 'Zoom out / zoom in'],
-      [n.a, 'Tap what the pointer is on. Fishing: hold to wind up and to reel.'],
+      [n.a, 'Tap what the pointer is on. Fishing and the ranges: cast, reel, shoot.'],
       [n.b, 'Home'],
       [n.lb + ' / ' + n.rb, 'Step through the missions'],
       [n.menu, 'Jump to the card’s buttons'],
@@ -132,6 +132,7 @@
     if (!window.__ready || typeof ctrl === 'undefined' || !ctrl) return;
     const walking = typeof SCW !== 'undefined' && SCW.on; if (typeof SCW !== 'undefined') SCW.pad = [0, 0];
     const fishing = typeof SCF !== 'undefined' && SCF.on; if (typeof SCF !== 'undefined') SCF.pad = false;
+    const ranging = typeof SCR !== 'undefined' && SCR.on; if (typeof SCR !== 'undefined') SCR.pad = false;
     const g = pick1(); if (!g) { if (GP.shown) show(false); GP.was = []; return }
     const W = window.innerWidth, H = window.innerHeight;
     const lx = axis(g.axes[0]), ly = axis(g.axes[1]), rx = axis(g.axes[2]), ry = axis(g.axes[3]);
@@ -162,7 +163,8 @@
     const ty = card && card.scrollHeight > card.clientHeight + 1 ? 0 : ry;
     if (rx || ty) {
       stop();
-      if (ctrl.walk) { ctrl.walk.yaw -= rx * 1.6 * dt; ctrl.walk.pitch = Math.min(1.25, Math.max(-1.25, ctrl.walk.pitch - ty * 1.2 * dt)) }
+      const slow = ranging ? 0.22 : 1;      // on a range the right stick aims finely
+      if (ctrl.walk) { ctrl.walk.yaw -= rx * 1.6 * slow * dt; ctrl.walk.pitch = Math.min(1.25, Math.max(-1.25, ctrl.walk.pitch - ty * 1.2 * slow * dt)) }
       else { ctrl.sph.theta -= rx * 1.9 * dt; ctrl.sph.phi = Math.min(Math.PI / 2 - 0.01, Math.max(0.03, ctrl.sph.phi - ty * 1.2 * dt)) }
       moved = true;
     }
@@ -173,7 +175,7 @@
     setHover(over && over !== canvas ? control(over) : null);
 
     // buttons (acted on once per press)
-    if (fishing && !GP.hover) SCF.pad = down[0]; else if (hit(0)) tap();      // fishing: A is the rod (hold to wind up and to reel), unless the pointer is on a button
+    if (fishing && !GP.hover) SCF.pad = down[0]; else if (ranging && !GP.hover) SCR.pad = down[0]; else if (hit(0)) tap();      // fishing: A is the rod (hold to wind up and to reel), unless the pointer is on a button
     if (hit(1) && typeof scHome === 'function') scHome();
     if (hit(2)) { if (walking && typeof scwUse === 'function' && scwUse()) { } else { GP.x = W / 2; GP.y = H / 2; place() } }
     if (hit(3)) { if (typeof scBearKey === 'function' && scBearKey()) { } else if (typeof setTime === 'function') setTime(NIGHT > 0.5 ? 15 : 22.5) }

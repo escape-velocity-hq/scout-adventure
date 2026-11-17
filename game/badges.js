@@ -12,9 +12,11 @@ const SC_BADGES = [
   { id: 'camp', name: 'Camp Builder', icon: '⛺' },
   { id: 'fire', name: 'Fire Safe', icon: '🔥' },
   { id: 'paint', name: 'Steady Aim', icon: '🎯' },
-  { id: 'shoes', name: 'Ringer', icon: '🐴' }];
+  { id: 'shoes', name: 'Ringer', icon: '🐴' },
+  { id: 'bb', name: 'Range Safe', icon: '\uD83E\uDD7D' },
+  { id: 'archery', name: 'Straight Arrow', icon: '\uD83C\uDFF9' }];
 // a patrol's standing, by how many badges it holds
-const SC_STANDING = [[10, 'Basserie Legend'], [7, 'Pond Master'], [4, 'Farm Ranger'], [1, 'Trail Scout'], [0, 'New Arrival']];
+const SC_STANDING = [[12, 'Basserie Legend'], [8, 'Pond Master'], [4, 'Farm Ranger'], [1, 'Trail Scout'], [0, 'New Arrival']];
 
 const scHasBadge = (patrol, id) => ((SC.save.scores[patrol] || {})[id] || 0) > 0;
 const scBadgeCount = patrol => SC_BADGES.filter(b => scHasBadge(patrol, b.id)).length;
@@ -34,7 +36,7 @@ function scBadgeCard() {
 }
 function scParents() {
   scCard('For Parents', ['Suitable for all ages. Made for Scouts visiting the farm.',
-    { list: ['Nothing violent. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.',
+    { list: ['Nothing violent. The paintball, BB gun and archery ranges shoot at targets only (paper, round targets and foam animal targets), never at people or real animals, and open with the range safety rules. Fishing is catch and release.',
       'A cartoon bear roams the farm. If it reaches a Scout on foot it takes some play tokens and wanders off. Nobody is hurt, and a class teaches how Bear Spray is really used.',
       'No ads, no purchases, no chat, no accounts and no links to other websites.',
       'The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.',
