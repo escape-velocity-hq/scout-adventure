@@ -70,3 +70,6 @@
 #sccard{max-height:min(46vh,calc(100vh - 96px));max-height:min(46vh,calc(100dvh - 96px))}
 @media (max-width:760px){#sccard{max-height:min(40vh,calc(100dvh - 96px))}}
 @media (orientation:landscape) and (max-height:480px){#sccard{max-height:min(62vh,calc(100dvh - 96px))}}
+/* the Menu button that stands where a put-away card was */
+#scmenu{position:fixed;z-index:30;left:max(10px,env(safe-area-inset-left,0px));top:calc(10px + env(safe-area-inset-top,0px))}
+#scmenu[hidden]{display:none}

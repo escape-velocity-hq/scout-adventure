@@ -105,7 +105,7 @@ function scFishSay(txt, fill, cls, btn) {
 }
 function scFishCard(extra) {
   const b = scBank(), bc = scBigCatch(), has = []; if (b.bait > 0) has.push(b.bait + (b.bait === 1 ? ' worm' : ' worms')); if (b.spinner) has.push('Spinner Lure'); if (b.rod) has.push('Heavy Rod'); if (b.line) has.push('Braided Line'); if (b.lure > 0) has.push(b.lure + (b.lure === 1 ? ' Monster Lure' : ' Monster Lures'));
-  scCard('Catch A Bass', (extra || ['You are fishing from ' + SCF.name + '.', 'Hold CAST to wind up and let go to cast. When a fish bites, press to set the hook. Then hold to reel and let go when it runs.']).concat([
+  scCard('Catch A Bass', (extra || ['You are fishing from ' + SCF.name + '.', 'Hold CAST to wind up and let go to cast. When a fish bites, press to set the hook. Then hold to reel and let go when it runs.', SCF.deck ? '' : 'With the line in you can walk along the bank, rod in hand.']).concat([
     'Fish landed: ' + SCF.n + '. Points: ' + SCF.pts + '.', { small: has.length ? 'Tackle: ' + has.join(', ') + '.' : 'Tackle: plain rod, hook and line. The Tackle Shop has more.' },
     bc ? { small: 'Your biggest catch: ' + bc.inches + ' inch ' + bc.name + (bc.trophy ? ' (trophy)' : '') + '.' } : '', { small: 'Drag to look around. Space or the big button casts and reels.' }]).filter(Boolean),
     [{ label: 'Done Fishing', go: true, fn: scHome }, { label: 'Tackle Shop', fn: () => { scFishIdle(); scTackleFromFishing() } }]);
@@ -118,7 +118,7 @@ const scFishMission = {
   id: 'fish', name: 'Catch A Bass',
   start() {
     const s = SCF.next || scFishBank() || { x: SCW.x, z: SCW.z, yaw: SCW.yaw, y: scY(SCW.x, SCW.z) + SCW.eye, name: 'the bank' }; SCF.next = null; scFishGear(); scFishHud();
-    SCF.x = s.x; SCF.z = s.z; SCF.y = s.y; SCF.name = s.name; SCF.pts = 0; SCF.n = 0; SCF.paid = false; SCF.on = true; scFishIdle();
+    SCF.x = s.x; SCF.z = s.z; SCF.y = s.y; SCF.name = s.name; SCF.deck = !!s.deck; document.body.classList.toggle('scw-on', !s.deck); SCF.pts = 0; SCF.n = 0; SCF.paid = false; SCF.on = true; scFishIdle();
     if (!s.deck) { SCW.x = s.x; SCW.z = s.z; SCW.yaw = s.yaw; SCW.has = true }      // the walk picks up from the bank afterwards
     try { fly = null } catch (e) { } ctrl.walk = { pos: new THREE.Vector3(s.x, s.y, s.z), yaw: s.yaw, pitch: -0.1 }; cam.fov = SCW.fov; cam.updateProjectionMatrix(); ctrl.target.set(s.x, s.y - SCW.eye, s.z); ctrl.sph.radius = 45; ctrl.update();
     SCF.rod.visible = true; document.getElementById('scfish').hidden = false; scFishCard();
@@ -133,7 +133,8 @@ const scFishMission = {
 };
 function scFishTick(t, dt) {
   if (!SCF.on || !ctrl.walk) return; const F = SC_FISHING, bank = scBank(), yaw = ctrl.walk.yaw, hold = SCF.btn || SCF.key || SCF.pad, press = hold && !SCF.was, release = !hold && SCF.was; SCF.was = hold; SCF.hold = hold;
-  ctrl.walk.pos.set(SCF.x, SCF.y, SCF.z);
+  if (SCF.st === 'idle' && !SCF.deck) scFishWalk(dt, yaw);      // rod in hand and line in: the Scout can walk the bank like anyone would
+  ctrl.walk.pos.set(SCF.x, SCF.y, SCF.z); ctrl.target.set(SCF.x, SCF.y - SCW.eye, SCF.z);
   if (SCF.st === 'idle') { scFishSay('Hold CAST to wind up. Let go to cast.', 0, '', 'CAST'); if (press) { SCF.st = 'charge'; SCF.t0 = t; SCF.power = 0 } }
   else if (SCF.st === 'charge') {
     SCF.power = 0.5 - 0.5 * Math.cos((t - SCF.t0) / F.windUp * 6.2832); scFishSay('Winding up... let go to cast.', SCF.power, 'pow', 'LET GO');
@@ -180,6 +181,11 @@ function scFishTick(t, dt) {
   }
   else if (SCF.st === 'fight') scFishFight(t, dt, hold, bank);
   scFishDraw(t);
+}
+function scFishWalk(dt, yaw) {      // the same walking as without a rod: same keys, same stick, same things in the way
+  const [ix, iy, moving] = scwInput(); if (!moving) return; const fx = Math.sin(yaw), fz = Math.cos(yaw), rx = -fz, rz = fx, sp = SCW.walk * dt, dx = (fx * iy + rx * ix) * sp, dz = (fz * iy + rz * ix) * sp, x = SCF.x, z = SCF.z;
+  if (scwCanGo(x, z, x + dx, z + dz, 0.55)) { SCF.x += dx; SCF.z += dz } else if (scwCanGo(x, z, x + dx, z, 0.55)) SCF.x += dx; else if (scwCanGo(x, z, x, z + dz, 0.55)) SCF.z += dz;
+  SCW.bob += Math.hypot(SCF.x - x, SCF.z - z) * 2.1; SCF.y = scY(SCF.x, SCF.z) + SCW.eye + Math.sin(SCW.bob) * 0.035; SCW.x = SCF.x; SCW.z = SCF.z; SCW.yaw = yaw; SCW.has = true; SCF.name = 'the bank';
 }
 function scFishHook(t) {      // the hook is set: size the fish up and start the fight
   const F = SC_FISHING, f = SCF.fish, bank = scBank(); SCF.L0 = f.L; if (SCF.big) f.L = f.sp.L[1] * scRnd(SC_TROPHY.grow[0], SC_TROPHY.grow[1]);

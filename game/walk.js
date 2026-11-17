@@ -102,7 +102,7 @@ function scwKey(e) { const pad = { Numpad8: 'ArrowUp', Numpad2: 'ArrowDown', Num
 function scwWantsToWalk(k) {
   if (SCW.on || !SCW.ready) return; const fishing = typeof SCF !== 'undefined' && SCF.on, ranging = typeof SCR !== 'undefined' && SCR.on;
   if (ranging && /^Arrow/.test(k)) return;      // on a range the arrow keys aim
-  if (SC.cur) { const now = performance.now(); if (now - (SCW.told || 0) > 4000) { SCW.told = now; toast(fishing ? 'You are fishing, so you stand still. Press Done Fishing (or Home) to walk again.' : ranging ? 'You are on the firing line. Press Done (or Home) to walk again.' : 'This mission is played from above. Press Home to walk again.') } return }
+  if (SC.cur) { const now = performance.now(); if (now - (SCW.told || 0) > 4000) { SCW.told = now; if (fishing && !SCF.deck && SCF.st === 'idle') return; toast(fishing ? (SCF.deck ? 'You are on the deck. Press Done Fishing (or Home) to walk again.' : 'Your line is out. Reel in first, then you can walk with the rod.') : ranging ? 'You are on the firing line. Press Done (or Home) to walk again.' : 'This mission is played from above. Press Home to walk again.') } return }
   if (!scAvatar()) return; SCW.want = true; scwEnter();
 }
 window.addEventListener('keydown', e => { if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '')) return; const k = scwKey(e); SCW.keys[k] = true; if (/^(w|a|s|d|ArrowUp|ArrowDown|ArrowLeft|ArrowRight)$/.test(k)) scwWantsToWalk(k); if (SCW.on && /^Arrow/.test(k)) e.preventDefault(); if (SCW.on && k === 'e' && typeof scwUse === 'function') scwUse() });
@@ -139,6 +139,9 @@ scInit = function () {
   const b = scEl('button', 'scbtn', 'Map'); b.id = 'scwmap'; b.title = 'Switch between walking and the overhead map'; b.onclick = () => { if (SCW.on) scwMap(); else { SCW.want = true; scwEnter() } };
   if (top) top.insertBefore(b, top.children[1] || null);
   const u = scEl('button', 'scbtn go'); u.id = 'scwuse'; u.hidden = true; document.body.appendChild(u); scwStick();
+  // whenever the card is put away, a Menu button stands in its corner to bring it back
+  const card = document.getElementById('sccard'), menu = scEl('button', 'scbtn go', '\u2630 Menu'); menu.id = 'scmenu'; menu.hidden = true; menu.title = 'Show the card again'; menu.onclick = () => { if (SC.cur && card.firstChild) card.hidden = false; else scHome() }; document.body.appendChild(menu);
+  if (card) new MutationObserver(() => { menu.hidden = !card.hidden }).observe(card, { attributes: true, attributeFilter: ['hidden'] });
   setTimeout(() => { SCW.ready = true; if (!SC.cur && SCW.want) scwEnter() }, 2400);      // a look at the farm from above, then down to the ground
 };
 // the welcome banner at the Fishing Lounge gets the date under it
