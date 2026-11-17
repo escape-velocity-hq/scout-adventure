@@ -34,6 +34,10 @@ A cartoon bear roams the farm. If it sees a Scout on foot within 45 metres it st
 
 Bear Spray (Camp Store, 6 tokens for three bursts) stops it, used the way the real thing is taught: keep it within reach, take the safety clip off, aim slightly down at the bear, and spray when it is 30 to 60 feet away. In the game the Bear Spray button (or F, or Y on a controller) takes the clip off on the first press and sprays on the next. The first good spray earns 10 tokens. The Bear Spray Class card lists the steps, which follow the guidance published by Yellowstone Forever, Be Bear Aware and REI. Settings: `SC_BEAR` in `game/bear.js`.
 
+## Fountain Play
+
+The Fountains button on the Welcome card lets the Scouts run the pond fountains: Normal, Gentle (6 ft), Tall (25 ft), EXTREME (about 50 ft), or Off, with colour-changing lights that show best at night. Every pond changes together. Settings: `SC_FOUNTAINS` in `game/fountains.js`.
+
 ## Controllers
 
 Plug in or pair an Xbox or PlayStation controller and press any button. A yellow pointer appears and a help card lists the buttons.
@@ -163,6 +167,7 @@ game/walk.js               first-person walking, the Scout chooser, the Map butt
 game/ride.js               golf carts, ATVs and the motorcycle
 game/bear.js               the bear, Bear Spray and the Bear Spray class
 game/fishing.js            first-person fishing with a rod (takes the place of the fishing in missions-water-sky.js)
+game/fountains.js          fountain play, up to 50 ft
 game/landmarks.js          the well house
 game/gamepad.js            Xbox and PlayStation controllers
 scene.json, ground_tex.jpg the farm itself (generated from the farm model; do not edit by hand)
