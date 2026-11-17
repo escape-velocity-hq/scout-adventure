@@ -112,7 +112,7 @@
     jump(b[GP.mis]);
   }
   function stepCard() {
-    const b = [...document.querySelectorAll('#sccard button, #sccard input')].filter(e => e.offsetParent !== null); if (!b.length) return;
+    const b = [...document.querySelectorAll('#sccard button:not(.scclose), #sccard input')].filter(e => e.offsetParent !== null); if (!b.length) return;
     const cur = b.findIndex(e => e === GP.hover); jump(b[cur >= 0 ? (cur + 1) % b.length : 0]);      // from the first button, unless the pointer is already on one
   }
   function travel(mx, my, dt) {      // move the look-at point over the ground: mx to the right, my away from the camera
@@ -141,7 +141,7 @@
     const down = g.buttons.map(b => !!(b && b.pressed)), hit = i => down[i] && !GP.was[i];
     const busy = lx || ly || rx || ry || Math.abs(zin) > 0.05 || down.some(Boolean);
     if (busy) {
-      if (g.index !== GP.idx || !GP.seen) { GP.idx = g.index; GP.kind = kindOf(g.id); if (!GP.seen) { GP.seen = true; GP.x = W / 2; GP.y = H / 2; showHelp(true) } }
+      if (g.index !== GP.idx || !GP.seen) { GP.idx = g.index; GP.kind = kindOf(g.id); if (!GP.seen) { GP.seen = true; GP.fresh = true; GP.x = W / 2; GP.y = H / 2; showHelp(true) } }
       if (!GP.shown) { GP.x = Math.min(W - 4, Math.max(4, GP.x || W / 2)); GP.y = Math.min(H - 4, Math.max(4, GP.y || H / 2)); show(true); place() }
       GP.last = now;
     }
@@ -182,7 +182,8 @@
     if (hit(3)) { if (typeof scBearKey === 'function' && scBearKey()) { } else if (typeof setTime === 'function') setTime(NIGHT > 0.5 ? 15 : 22.5) }
     if (hit(4)) stepMission(-1);
     if (hit(5)) stepMission(1);
-    if (hit(8)) showHelp(help.hidden);
+    if (hit(8) && !GP.fresh) showHelp(help.hidden);      // the press that woke the controller has already shown the help
+    if (!down.some(Boolean)) GP.fresh = false;
     if (hit(9)) stepCard();
     GP.was = down;
   }
