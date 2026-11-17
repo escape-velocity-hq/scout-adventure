@@ -54,7 +54,7 @@ function scwSpot() {      // somewhere clear to start: the end of the driveway, 
 }
 
 // ---- in and out of the walk
-function scwPlace() { const w = ctrl.walk; if (!w) return; w.pos.set(SCW.x, scY(SCW.x, SCW.z) + (SCW.ride ? SCW.ride.eye : SCW.eye) + Math.sin(SCW.bob) * 0.035, SCW.z); w.yaw = SCW.yaw; w.pitch = SCW.pitch; ctrl.target.set(SCW.x, scY(SCW.x, SCW.z), SCW.z); ctrl.sph.radius = 45; ctrl.update() }
+function scwPlace() { const w = ctrl.walk; if (!w) return; w.pos.set(SCW.x, scY(SCW.x, SCW.z) + (SCW.ride ? SCW.ride.def.eye : SCW.eye) + Math.sin(SCW.bob) * 0.035, SCW.z); w.yaw = SCW.yaw; w.pitch = SCW.pitch; ctrl.target.set(SCW.x, scY(SCW.x, SCW.z), SCW.z); ctrl.sph.radius = 45; ctrl.update() }
 function scwEnter() {
   if (SC.cur) return; if (!SCW.has) { const s = scwSpot(), c = scMark('Fishing Lounge') || scMark('Cabin'); SCW.x = s[0]; SCW.z = s[1]; SCW.yaw = c ? Math.atan2(c.p[0] - s[0], c.p[2] - s[1]) : 0; SCW.pitch = 0; SCW.has = true }
   try { fly = null; if (typeof stopDrive === 'function') stopDrive() } catch (e) { }

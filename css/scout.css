@@ -46,4 +46,4 @@
 #scwstick{display:none;position:fixed;z-index:28;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(128px + env(safe-area-inset-bottom,0px));width:112px;height:112px;border-radius:50%;background:rgba(22,30,24,.45);border:2px solid rgba(242,194,48,.6);touch-action:none}
 #scwnub{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(242,194,48,.85);pointer-events:none}
 @media (pointer:coarse){.scw-on #scwstick{display:block}}
-#scwuse{position:fixed;z-index:29;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom,0px));white-space:nowrap}
+#scwuse{position:fixed;z-index:29;left:50%;transform:translateX(-50%);bottom:calc(124px + env(safe-area-inset-bottom,0px));white-space:nowrap}
