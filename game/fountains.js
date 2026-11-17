@@ -28,3 +28,11 @@ function scFountainCard() {
 }
 const scHomeFn0 = scHome;
 scHome = function () { scHomeFn0(); const row = document.querySelector('#sccard .scrow'); if (!row || !S.fountains || !document.querySelector('#sccard .scclose')) return; const e = scEl('button', 'scbtn', 'Fountains'); e.onclick = scFountainCard; row.insertBefore(e, row.lastChild) };
+
+// A Fountains button in the side column, right after Home, so it is always in reach (inside "Games & More" on a phone).
+(function scFountBtn() {
+  const top = document.getElementById('sctop'); if (!top) return setTimeout(scFountBtn, 300);
+  if (document.getElementById('scfount') || !S.fountains) return;
+  const b = scEl('button', 'scbtn', 'Fountains'); b.id = 'scfount'; b.title = 'Play with the pond fountains'; b.setAttribute('aria-label', b.title); b.onclick = scFountainCard;
+  const home = [...top.children].find(e => e.textContent.trim() === 'Home'); top.insertBefore(b, home ? home.nextSibling : null);
+})();
