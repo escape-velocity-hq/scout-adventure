@@ -34,7 +34,8 @@ function scBadgeCard() {
 }
 function scParents() {
   scCard('For Parents', ['Suitable for all ages. Made for Scouts visiting the farm.',
-    { list: ['Nothing violent or scary. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.',
+    { list: ['Nothing violent. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.',
+      'A cartoon bear roams the farm. If it reaches a Scout on foot it takes some play tokens and wanders off. Nobody is hurt, and a class teaches how Bear Spray is really used.',
       'No ads, no purchases, no chat, no accounts and no links to other websites.',
       'The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.',
       'Nothing your child types is sent anywhere. Patrol names, scores and badges stay in this browser on this device.',

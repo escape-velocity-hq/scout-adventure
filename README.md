@@ -20,22 +20,36 @@ It runs in a web browser on a phone, tablet or laptop. Nothing to install.
 
 Every mission earns points for the patrol that is playing. The Scoreboard ranks the patrols.
 
+## Walking The Farm
+
+The game opens on foot, in first person, after the patrol chooses the Scout it plays as. Walk with W A S D or the arrow keys (Shift to jog), the on-screen stick on a phone or tablet, or a controller's left stick. Drag on the farm to look around. Ponds, tree trunks, buildings and the property line stop a Scout. The **Map** button lifts to the overhead view and flags where the Scout is standing. Missions run in the overhead view and hand the walk back at Home. Thirty metres on foot uses one energy. Settings: `SCW` at the top of `game/walk.js`.
+
+## Vehicles
+
+Two golf carts, two ATVs and a motorcycle are parked on the parking pad. Walk up and press Use (the yellow button, the E key, or X on a controller) to get on, and again to get off. Golf carts are free; the ATV rents for 5 tokens a ride and the motorcycle for 8. Ahead and back are the throttle; left and right steer. Riding uses no energy. Settings: `SC_RIDES` in `game/ride.js`.
+
+## The Bear
+
+A cartoon bear roams the farm. If it sees a Scout on foot within 45 metres it stares, then charges, and it is faster than a Scout can jog. If it reaches the Scout it takes 10 tokens and wanders off; nobody is hurt. A Scout on a vehicle, on the Map or in a mission is left alone.
+
+Bear Spray (Camp Store, 6 tokens for three bursts) stops it, used the way the real thing is taught: keep it within reach, take the safety clip off, aim slightly down at the bear, and spray when it is 30 to 60 feet away. In the game the Bear Spray button (or F, or Y on a controller) takes the clip off on the first press and sprays on the next. The first good spray earns 10 tokens. The Bear Spray Class card lists the steps, which follow the guidance published by Yellowstone Forever, Be Bear Aware and REI. Settings: `SC_BEAR` in `game/bear.js`.
+
 ## Controllers
 
 Plug in or pair an Xbox or PlayStation controller and press any button. A yellow pointer appears and a help card lists the buttons.
 
 | Xbox | PlayStation | What It Does |
 |---|---|---|
-| Left stick | Left stick | Move the pointer. Push past the screen edge to travel. |
-| D-pad | D-pad | Travel around the farm |
+| Left stick | Left stick | On foot: walk. On the Map: move the pointer. |
+| D-pad | D-pad | On foot: move the pointer. On the Map: travel. |
 | Right stick | Right stick | Turn and tilt the view |
 | LT / RT | L2 / R2 | Zoom out / zoom in |
 | A | Cross | Tap what the pointer is on |
 | B | Circle | Home |
 | LB / RB | L1 / R1 | Step through the missions |
 | Menu | Options | Jump to the card's buttons |
-| X | Square | Centre the pointer |
-| Y | Triangle | Day / night |
+| X | Square | Use what is in front of you, or centre the pointer |
+| Y | Triangle | Day / night. When a bear is after you: Bear Spray. |
 | View | Create | Show or hide the help |
 
 Touch and mouse keep working; moving the mouse or touching the screen puts the pointer away. Typing a patrol name still needs the keyboard or the screen.
@@ -91,7 +105,8 @@ Patrol name, troop number, each patrol's best score per mission, its biggest cat
 
 Suitable for all ages. This is the farm's own description, not an official ESRB or PEGI rating.
 
-- Nothing violent or scary. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.
+- Nothing violent. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.
+- A cartoon bear roams the farm. If it reaches a Scout on foot it takes some play tokens and wanders off. Nobody is hurt, and a class teaches how Bear Spray is really used.
 - No ads, no purchases, no chat, no accounts and no links to other websites.
 - The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.
 - Nothing a child types is sent anywhere. Patrol names, scores and badges stay in the browser on that device.
@@ -133,6 +148,10 @@ game/missions-games.js     Paintball Range, Horseshoes
 game/monsters.js           one monster fish in each pond that leaps and splashes
 game/badges.js             one badge per mission, the Badges card, the For Parents card
 game/tokens.js             tokens, energy, the vending machine and the tackle shop
+game/walk.js               first-person walking, the Scout chooser, the Map button
+game/ride.js               golf carts, ATVs and the motorcycle
+game/bear.js               the bear, Bear Spray and the Bear Spray class
+game/landmarks.js          the well house
 game/gamepad.js            Xbox and PlayStation controllers
 scene.json, ground_tex.jpg the farm itself (generated from the farm model; do not edit by hand)
 ```

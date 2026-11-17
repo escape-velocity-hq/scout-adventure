@@ -47,3 +47,6 @@
 #scwnub{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(242,194,48,.85);pointer-events:none}
 @media (pointer:coarse){.scw-on #scwstick{display:block}}
 #scwuse{position:fixed;z-index:29;left:50%;transform:translateX(-50%);bottom:calc(124px + env(safe-area-inset-bottom,0px));white-space:nowrap}
+/* the bear: how far away it is, and the Bear Spray button */
+#scbear{position:fixed;z-index:31;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));white-space:nowrap;border-color:#e2573b;background:rgba(60,20,14,.92);font-size:16px}
+#scbear.go{background:#f2c230;border-color:#f2c230;color:#1c1a0c}

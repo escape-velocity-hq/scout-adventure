@@ -59,7 +59,7 @@
       [n.lb + ' / ' + n.rb, 'Step through the missions'],
       [n.menu, 'Jump to the card’s buttons'],
       [n.x, 'Use what is in front of you, or centre the pointer'],
-      [n.y, 'Day / night'],
+      [n.y, 'Day / night. When a bear is after you: Bear Spray.'],
       [n.view, 'Show or hide this help']];
     help.textContent = '';
     const h = document.createElement('h2'); h.textContent = (GP.kind === 'ps' ? 'PlayStation' : 'Xbox') + ' Controller Connected'; help.appendChild(h);
@@ -175,7 +175,7 @@
     if (hit(0)) tap();
     if (hit(1) && typeof scHome === 'function') scHome();
     if (hit(2)) { if (walking && typeof scwUse === 'function' && scwUse()) { } else { GP.x = W / 2; GP.y = H / 2; place() } }
-    if (hit(3) && typeof setTime === 'function') setTime(NIGHT > 0.5 ? 15 : 22.5);
+    if (hit(3)) { if (typeof scBearKey === 'function' && scBearKey()) { } else if (typeof setTime === 'function') setTime(NIGHT > 0.5 ? 15 : 22.5) }
     if (hit(4)) stepMission(-1);
     if (hit(5)) stepMission(1);
     if (hit(8)) showHelp(help.hidden);
