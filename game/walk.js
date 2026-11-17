@@ -40,7 +40,7 @@ function scwBlocked(x, z, pad) {
 }
 const scwRay = new THREE.Raycaster();
 function scwWall(x, z, dx, dz, reach) {      // is there a building in the way, this close ahead?
-  if (!SCW.solids) SCW.solids = picks.filter(m => m.userData && m.userData.rng && !(typeof leafMeshes !== 'undefined' && leafMeshes.includes(m)));
+  if (!SCW.solids) SCW.solids = picks.filter(m => m.userData && (m.userData.rng || m.userData.solid) && !(typeof leafMeshes !== 'undefined' && leafMeshes.includes(m)));
   const n = Math.hypot(dx, dz); if (n < 1e-6) return false;
   scwRay.set(new THREE.Vector3(x, scY(x, z) + 0.9, z), new THREE.Vector3(dx / n, 0, dz / n)); scwRay.near = 0; scwRay.far = reach;
   return scwRay.intersectObjects(SCW.solids.filter(m => m.visible), false).length > 0;
