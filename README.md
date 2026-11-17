@@ -11,7 +11,7 @@ It runs in a web browser on a phone, tablet or laptop. Nothing to install.
 | Compass Course | Follow a bearing and a distance from a start flag | Bearings and pacing |
 | Follow The Raindrop | Tap the ground and watch the rain run downhill | Watersheds |
 | Wildlife Spotter | Find seven animals hidden around the farm | Local wildlife |
-| Catch A Bass | Cast, wait for the bite, reel in time | Patience, catch and release |
+| Catch A Bass | Cast, wait for the bite, reel in time. About one bite in four is a trophy fish. | Patience, catch and release |
 | Night Sky Hunt | Find the Big Dipper, North Star, Cassiopeia, Orion and the farm's own star pictures | Finding north at night |
 | Pitch Your Camp | Place tents, a dining fly and a fire ring; get the site scored | Campsite selection |
 | Fire Class | Answer Ember The Owl's questions and build a safe campfire step by step | Fire safety |
@@ -44,9 +44,13 @@ Touch and mouse keep working; moving the mouse or touching the screen puts the p
 
 Each mission has a badge, earned the first time a patrol scores in it. The Home card shows how many the patrol holds, and the Badges card shows all ten and the patrol's standing (Trail Scout, Farm Ranger, Pond Master, Basserie Legend). These are the farm's own badges, not Scouting America ranks or merit badges.
 
+## Trophy Fish
+
+In Catch A Bass any of the nine kinds of fish stocked in the ponds can bite: largemouth bass, F1 tiger bass, bream, redear sunfish, warmouth, channel catfish, tilapia, butterfly koi and grass carp. About one bite in four is a "BIG BITE", and the last cast of a round always is if the round has had none. A trophy is 8 to 22 percent longer than the biggest of its kind swimming in the ponds and scores 100 bonus points. The game remembers each patrol's biggest catch. The settings are at the top of `game/missions-water-sky.js` (`SC_TROPHY`).
+
 ## What Is Saved
 
-Patrol name, troop number, each patrol's best score per mission, and its badges are kept in the browser on that device. They are still there after the page is closed. A half-played mission is not saved. Nothing is shared between devices.
+Patrol name, troop number, each patrol's best score per mission, its biggest catch, and its badges are kept in the browser on that device. They are still there after the page is closed. A half-played mission is not saved. Nothing is shared between devices.
 
 ## For Parents
 

@@ -1,26 +1,31 @@
 // ===== Missions: Catch A Bass, Night Sky Hunt =====
 
 // ---- Catch A Bass: cast onto a pond, wait for the bite, reel in time
+// Trophy fish: about one bite in four is a big one, and the last cast of a round always is if none has bitten yet.
+// A trophy is longer than the biggest of its kind swimming in the ponds, and earns a bonus.
+const SC_TROPHY = { chance: 0.25, grow: [1.08, 1.22], bonus: 100 };
+function scBigCatch(patrol) { return (SC.save.big || {})[patrol || SC.save.patrol || 'Patrol 1'] || null }      // a patrol's biggest fish: {inches, name, trophy}
+function scNoteCatch(inches, name, trophy) { const p = SC.save.patrol || 'Patrol 1', b = SC.save.big || (SC.save.big = {}); if (!b[p] || inches > b[p].inches) { b[p] = { inches, name, trophy: !!trophy }; scSave(); return true } return false }
 SC_MISSIONS.push({
   id: 'fish', name: 'Catch A Bass',
-  start() { this.casts = 6; this.pts = 0; this.best = null; this.st = 'idle'; this.bob = null; const p = S.ponds[2] || S.ponds[0]; let cx = 0, cz = 0; p.xy.forEach(q => { cx += q[0] / p.xy.length; cz += q[1] / p.xy.length }); flyTo({ p: [cx + 18, p.z + 62, cz + 38], t: [cx, p.z, cz] }); this.show() },
-  show(extra) { scCard('Catch A Bass', (extra || []).concat([this.casts > 0 ? 'Tap the water to cast. Casts left: ' + this.casts + '.' : '', 'Points: ' + this.pts]).filter(Boolean), this.casts > 0 ? [] : [{ label: 'Play Again', fn: () => scStart(this) }, { label: 'Home', go: true, fn: scHome }]) },
+  start() { this.casts = 6; this.pts = 0; this.best = null; this.st = 'idle'; this.bob = null; this.big = false; this.hadBig = false; const p = S.ponds[2] || S.ponds[0]; let cx = 0, cz = 0; p.xy.forEach(q => { cx += q[0] / p.xy.length; cz += q[1] / p.xy.length }); flyTo({ p: [cx + 18, p.z + 62, cz + 38], t: [cx, p.z, cz] }); this.show() },
+  show(extra) { const bc = scBigCatch(); scCard('Catch A Bass', (extra || []).concat([this.casts > 0 ? 'Tap the water to cast. Casts left: ' + this.casts + '.' : '', 'Points: ' + this.pts, bc ? { small: 'Your biggest catch: ' + bc.inches + ' inch ' + bc.name + (bc.trophy ? ' (trophy)' : '') + '.' } : { small: 'Trophy fish are in here. Watch for a BIG BITE.' }]).filter(Boolean), this.casts > 0 ? [] : [{ label: 'Play Again', fn: () => scStart(this) }, { label: 'Home', go: true, fn: scHome }]) },
   pick(e) {
     if (this.st !== 'idle' || this.casts <= 0) return true; const w = scWater(e); if (!w) { toast('Cast onto the water!'); return true }
     if (!this.bob) { this.bob = new THREE.Group(); const a = new THREE.Mesh(new THREE.SphereGeometry(0.28, 14, 10, 0, 6.3, 0, 1.6), new THREE.MeshBasicMaterial({ color: 0xe23b2e })), b = new THREE.Mesh(new THREE.SphereGeometry(0.28, 14, 10, 0, 6.3, 1.5, 1.7), new THREE.MeshBasicMaterial({ color: 0xffffff })); this.bob.add(a, b) }
-    SC.grp.add(this.bob); this.bob.position.set(w.x, w.pond.z + 0.1, w.z); this.w = w; this.st = 'wait'; this.casts--; this.biteAt = SC.t + scRnd(2, 6); try { ring(w.x, w.z, SC.t, 1.2) } catch (er) { }
+    SC.grp.add(this.bob); this.bob.position.set(w.x, w.pond.z + 0.1, w.z); this.w = w; this.st = 'wait'; this.casts--; this.biteAt = SC.t + scRnd(2, 6); this.big = Math.random() < SC_TROPHY.chance || (this.casts <= 0 && !this.hadBig); if (this.big) this.hadBig = true; try { ring(w.x, w.z, SC.t, 1.2) } catch (er) { }
     scCard('Catch A Bass', ['Your line is out. Watch the bobber...', { small: 'Do not reel until it dips!' }], [{ label: 'Reel In', big: true, fn: () => this.reel() }]); return true;
   },
   reel() {
     if (this.st === 'wait') { this.st = 'idle'; SC.grp.remove(this.bob); scMiss(); return this.show(['Too early! You pulled the bait away from the fish.']) }
     if (this.st !== 'bite') return; this.st = 'idle'; SC.grp.remove(this.bob); const w = this.w, inP = FISH.filter(f => inPoly(f.x, f.z, w.pond.xy)); let f = null, bd = 1e9; for (const q of inP) { const d = Math.hypot(q.x - w.x, q.z - w.z) * scRnd(0.5, 1.5); if (d < bd) { bd = d; f = q } }
     if (!f) f = FISH[(Math.random() * FISH.length) | 0]; if (!f) return this.show(['Nothing there this time.']);
-    const inches = Math.round(f.L / 0.0254), name = trn('sp', f.sp.sk) + (f.vr ? ' (' + f.vr + ')' : ''), p = inches * 5; this.pts += p; if (!this.best || inches > this.best) this.best = inches; scWin(); try { burst(w.x, w.pond.z + 0.05, w.z, SC.t, 1.4) } catch (er) { }
-    if (this.casts <= 0) scAward('fish', this.pts); this.show(['Fish on! You caught a ' + name + ', ' + inches + ' inches long. +' + p + ' points.', { small: 'Then you let it go. Catch and release keeps the pond full of big fish.' }]);
+    const big = this.big, inches = Math.round((big ? f.sp.L[1] * scRnd(SC_TROPHY.grow[0], SC_TROPHY.grow[1]) : f.L) / 0.0254), name = trn('sp', f.sp.sk) + (f.vr ? ' (' + f.vr + ')' : ''), p = inches * 5 + (big ? SC_TROPHY.bonus : 0); this.pts += p; const rec = scNoteCatch(inches, name, big); if (!this.best || inches > this.best) this.best = inches; scWin(); try { burst(w.x, w.pond.z + 0.05, w.z, SC.t, big ? 2.6 : 1.4) } catch (er) { }
+    if (this.casts <= 0) scAward('fish', this.pts); this.show([big ? 'TROPHY FISH! You landed a ' + name + ', ' + inches + ' inches long. +' + p + ' points, with ' + SC_TROPHY.bonus + ' for the trophy.' : 'Fish on! You caught a ' + name + ', ' + inches + ' inches long. +' + p + ' points.', rec ? 'That is your patrol\'s biggest catch so far!' : '', { small: big ? 'A quick photo, then you let it go. Catch and release is how a pond grows trophies.' : 'Then you let it go. Catch and release keeps the pond full of big fish.' }]);
   },
   tick(t) {
     if (!this.bob || this.st === 'idle') return; const w = this.w;
-    if (this.st === 'wait') { this.bob.position.y = w.pond.z + 0.1 + Math.sin(t * 2) * 0.03; if (t > this.biteAt) { this.st = 'bite'; this.until = t + 1.7; try { ring(w.x, w.z, t, 2) } catch (er) { } scBeep(520, 0.12); scCard('Catch A Bass', ['BITE!'], [{ label: 'REEL IN NOW!', big: true, go: true, fn: () => this.reel() }]) } }
+    if (this.st === 'wait') { this.bob.position.y = w.pond.z + 0.1 + Math.sin(t * 2) * 0.03; if (t > this.biteAt) { this.st = 'bite'; this.until = t + 1.7; try { ring(w.x, w.z, t, this.big ? 3.5 : 2) } catch (er) { } scBeep(this.big ? 330 : 520, this.big ? 0.3 : 0.12); scCard('Catch A Bass', [this.big ? 'BIG BITE! This one is heavy!' : 'BITE!'], [{ label: 'REEL IN NOW!', big: true, go: true, fn: () => this.reel() }]) } }
     else if (this.st === 'bite') { this.bob.position.y = w.pond.z - 0.12 + Math.sin(t * 22) * 0.06; if (t > this.until) { this.st = 'idle'; SC.grp.remove(this.bob); scMiss(); if (this.casts <= 0) scAward('fish', this.pts); this.show(['It got away! Reel as soon as the bobber dips.']) } }
   },
   stop() { this.st = 'idle' }

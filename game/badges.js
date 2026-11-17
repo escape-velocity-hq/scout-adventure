@@ -21,8 +21,8 @@ const scBadgeCount = patrol => SC_BADGES.filter(b => scHasBadge(patrol, b.id)).l
 const scStanding = n => SC_STANDING.find(s => n >= s[0])[1];
 
 function scBadgeCard() {
-  const p = SC.save.patrol || 'Patrol 1', n = scBadgeCount(p);
-  scCard('Badges', [p + ': ' + n + ' of ' + SC_BADGES.length + ' badges. Standing: ' + scStanding(n) + '.', { small: 'Score in a mission to earn its badge. They are in the same order as the missions at the bottom.' }], [{ label: 'Back', fn: scHome, go: true }]);
+  const p = SC.save.patrol || 'Patrol 1', n = scBadgeCount(p), bc = typeof scBigCatch === 'function' ? scBigCatch(p) : null;
+  scCard('Badges', [p + ': ' + n + ' of ' + SC_BADGES.length + ' badges. Standing: ' + scStanding(n) + '.', bc ? 'Biggest catch: ' + bc.inches + ' inch ' + bc.name + (bc.trophy ? ' (trophy)' : '') + '.' : '', { small: 'Score in a mission to earn its badge. They are in the same order as the missions at the bottom.' }], [{ label: 'Back', fn: scHome, go: true }]);
   const c = document.getElementById('sccard'), g = scEl('div', 'scbadges');
   for (const b of SC_BADGES) {
     const m = SC_MISSIONS.find(x => x.id === b.id), got = scHasBadge(p, b.id), d = scEl('div', 'scbadge' + (got ? ' got' : ''));
