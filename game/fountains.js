@@ -38,7 +38,7 @@ function scFountainCard() {
   const F = SC_FOUNTAINS, cur = F.modes.find(m => m.id === F.mode), nz = F.nozzles.find(n => n.id === F.nozzle), ld = F.leds.find(n => n.id === F.led);
   scCard('Fountains', ['You run the pond fountains. Height: ' + cur.name + '. Nozzle: ' + nz.name + '. LED lights: ' + ld.name + '.', { small: 'EXTREME throws the water about 100 feet up. The LED lights show best at night (Day / Night).' }],
     F.modes.map(m => ({ label: m.name, go: m.id === F.mode, big: m.id === 'extreme', fn: () => { scFountainSet(m.id); toast(m.say); if (m.id === 'extreme') scWin(); scFountainCard() } }))
-      .concat([{ label: 'Nozzle: ' + nz.name, fn: scFountainNozzles }, { label: 'LED Lights: ' + ld.name, fn: scFountainLeds }, { label: 'Back', fn: scHome }]));
+      .concat([{ label: 'Nozzle: ' + nz.name, fn: scFountainNozzles }, { label: 'LED Lights: ' + ld.name, fn: scFountainLeds }, { label: 'Day / Night', fn: () => { const n = NIGHT > 0.5; setTime(n ? 15 : 22.5); toast(n ? 'Daytime.' : 'Night time. Watch the LED lights glow.'); scFountainCard() } }, { label: 'Back', fn: scHome }]));
 }
 function scFountainNozzles() {
   const F = SC_FOUNTAINS;
@@ -48,7 +48,7 @@ function scFountainNozzles() {
 function scFountainLeds() {
   const F = SC_FOUNTAINS;
   scCard('Fountain LED Lights', ['Pick the light colour.', { small: 'The lights show best at night. Press Day / Night to see them glow.' }],
-    F.leds.map(n => ({ label: n.name, go: n.id === F.led, fn: () => { scFountainSet(null, n.id); toast('LED lights: ' + n.name + '.'); scFountainLeds() } })).concat([{ label: 'Back', fn: scFountainCard }]));
+    F.leds.map(n => ({ label: n.name, go: n.id === F.led, fn: () => { scFountainSet(null, n.id); toast('LED lights: ' + n.name + '.'); scFountainLeds() } })).concat([{ label: 'Day / Night', fn: () => { const n = NIGHT > 0.5; setTime(n ? 15 : 22.5); toast(n ? 'Daytime.' : 'Night time. Watch the LED lights glow.'); scFountainLeds() } }, { label: 'Back', fn: scFountainCard }]));
 }
 const scHomeFn0 = scHome;
 scHome = function () { scHomeFn0(); const row = document.querySelector('#sccard .scrow'); if (!row || !S.fountains || !document.querySelector('#sccard .scclose')) return; const e = scEl('button', 'scbtn', 'Fountains'); e.onclick = scFountainCard; row.insertBefore(e, row.lastChild) };
