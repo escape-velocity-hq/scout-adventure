@@ -22,7 +22,7 @@ const scStanding = n => SC_STANDING.find(s => n >= s[0])[1];
 
 function scBadgeCard() {
   const p = SC.save.patrol || 'Patrol 1', n = scBadgeCount(p), bc = typeof scBigCatch === 'function' ? scBigCatch(p) : null;
-  scCard('Badges', [p + ': ' + n + ' of ' + SC_BADGES.length + ' badges. Standing: ' + scStanding(n) + '.', bc ? 'Biggest catch: ' + bc.inches + ' inch ' + bc.name + (bc.trophy ? ' (trophy)' : '') + '.' : '', { small: 'Score in a mission to earn its badge. They are in the same order as the missions at the bottom.' }], [{ label: 'Back', fn: scHome, go: true }]);
+  scCard('Badges', [p + ': ' + n + ' of ' + SC_BADGES.length + ' badges. Standing: ' + scStanding(n) + '.', bc ? 'Biggest catch: ' + bc.inches + ' inch ' + bc.name + (bc.trophy ? ' (trophy)' : '') + '.' : '', (typeof scBank === 'function' && scBank(p).monsters.length) ? 'Monsters landed: ' + scBank(p).monsters.join(', ') + '.' : '', { small: 'Score in a mission to earn its badge. They are in the same order as the missions at the bottom.' }], [{ label: 'Back', fn: scHome, go: true }]);
   const c = document.getElementById('sccard'), g = scEl('div', 'scbadges');
   for (const b of SC_BADGES) {
     const m = SC_MISSIONS.find(x => x.id === b.id), got = scHasBadge(p, b.id), d = scEl('div', 'scbadge' + (got ? ' got' : ''));
@@ -36,6 +36,7 @@ function scParents() {
   scCard('For Parents', ['Suitable for all ages. Made for Scouts visiting the farm.',
     { list: ['Nothing violent or scary. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.',
       'No ads, no purchases, no chat, no accounts and no links to other websites.',
+      'The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.',
       'Nothing your child types is sent anywhere. Patrol names, scores and badges stay in this browser on this device.',
       'The page loads its 3D library and its lettering from two public services (cdnjs and Google Fonts). Like any website, they see the device’s internet address.'] },
     { small: 'This is the farm’s own description. It is not an official ESRB or PEGI rating.' }], [{ label: 'Back', fn: scHome, go: true }]);

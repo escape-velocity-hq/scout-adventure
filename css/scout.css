@@ -30,3 +30,11 @@
 .scbadgeicon{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;border:3px solid #6c7a5f;background:#0f1611;font-size:19px;line-height:1}
 .scbadge.got .scbadgeicon{border-color:#f2c230;box-shadow:0 0 0 2px rgba(242,194,48,.25)}
 .scbadgename{font:600 11px/1.15 Inter,system-ui,sans-serif;overflow-wrap:anywhere}
+/* tokens and energy: the pill above the top buttons, and the shop shelves */
+#schud{border-color:#f2c230;color:#f2c230;white-space:nowrap}
+#schud.low{border-color:#e2573b;color:#ffb4a2}
+#schud.flash{animation:schudflash .7s ease-out}
+@keyframes schudflash{0%{background:#f2c230;color:#1c1a0c;transform:scale(1.08)}100%{transform:scale(1)}}
+#sccard .scitem{flex:1 1 100%;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px}
+#sccard .scitemnote{font-weight:400;font-size:12px;opacity:.8}
+#sccard .scitem.cant{opacity:.55}

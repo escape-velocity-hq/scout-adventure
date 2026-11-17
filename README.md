@@ -48,9 +48,44 @@ Each mission has a badge, earned the first time a patrol scores in it. The Home 
 
 In Catch A Bass any of the nine kinds of fish stocked in the ponds can bite: largemouth bass, F1 tiger bass, bream, redear sunfish, warmouth, channel catfish, tilapia, butterfly koi and grass carp. About one bite in four is a "BIG BITE", and the last cast of a round always is if the round has had none. A trophy is 8 to 22 percent longer than the biggest of its kind swimming in the ponds and scores 100 bonus points. The game remembers each patrol's biggest catch. The settings are at the top of `game/missions-water-sky.js` (`SC_TROPHY`).
 
+## Monster Fish
+
+Each pond holds one abnormally large fish (1.25 to 1.75 times the biggest ordinary fish of its kind), with a name. Every 9 to 17 seconds one of them leaps and comes down with a big splash, and the game says which one. Settings are at the top of `game/monsters.js`.
+
+To land one, a patrol needs the Heavy Rod, the Braided Line and a Monster Lure, and has to cast close to where the monster is swimming. The fight takes four timed pulls; two mistakes and it is gone, with the lure. Landing one pays 60 tokens. Settings: `SC_MONSTER_CATCH` in `game/missions-water-sky.js`.
+
+## Tokens, Energy And The Shop
+
+Tokens are play money. They are earned by playing and cannot be bought.
+
+| Earned For | Tokens |
+|---|---|
+| Finishing any mission with a score | 10 |
+| Each fish landed | 1 for every 6 inches |
+| A trophy fish | 5 more |
+| Landing a monster | 60 |
+
+Starting a mission uses 12 energy and each cast uses 3. Running out never stops the game: a tired patrol earns half the tokens until it eats or drinks.
+
+| Vending Machine | Tokens | Gives |
+|---|---|---|
+| Water | 1 | 20 energy |
+| Lemonade | 2 | 45 energy |
+| Trail Mix | 4 | 100 energy |
+
+| Tackle Shop | Tokens | What It Does |
+|---|---|---|
+| Live Bait (6 worms) | 4 | Fish bite sooner. One worm a cast. |
+| Spinner Lure | 15 | Trophy bites go from one in four to two in five. Kept. |
+| Braided Line | 25 | Needed for a monster. Kept. |
+| Heavy Rod | 35 | Needed for a monster. Kept. |
+| Monster Lure | 20 | One try at a monster. |
+
+All the prices and amounts are in `SC_ECON` at the top of `game/tokens.js`.
+
 ## What Is Saved
 
-Patrol name, troop number, each patrol's best score per mission, its biggest catch, and its badges are kept in the browser on that device. They are still there after the page is closed. A half-played mission is not saved. Nothing is shared between devices.
+Patrol name, troop number, each patrol's best score per mission, its biggest catch, its tokens, energy and tackle, and its badges are kept in the browser on that device. They are still there after the page is closed. A half-played mission is not saved. Nothing is shared between devices.
 
 ## For Parents
 
@@ -58,6 +93,7 @@ Suitable for all ages. This is the farm's own description, not an official ESRB 
 
 - Nothing violent or scary. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.
 - No ads, no purchases, no chat, no accounts and no links to other websites.
+- The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.
 - Nothing a child types is sent anywhere. Patrol names, scores and badges stay in the browser on that device.
 - The page loads its 3D library and its lettering from two public services (cdnjs and Google Fonts). Like any website, they see the device's internet address.
 
@@ -94,7 +130,9 @@ game/missions-explore.js   Scavenger Hunt, Compass Course, Follow The Raindrop, 
 game/missions-water-sky.js Catch A Bass, Night Sky Hunt
 game/missions-camp-fire.js Pitch Your Camp, Fire Class With Ember The Owl
 game/missions-games.js     Paintball Range, Horseshoes
+game/monsters.js           one monster fish in each pond that leaps and splashes
 game/badges.js             one badge per mission, the Badges card, the For Parents card
+game/tokens.js             tokens, energy, the vending machine and the tackle shop
 game/gamepad.js            Xbox and PlayStation controllers
 scene.json, ground_tex.jpg the farm itself (generated from the farm model; do not edit by hand)
 ```
