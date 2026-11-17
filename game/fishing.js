@@ -274,3 +274,17 @@ const scwUseF0 = scwUse;
 scwUse = function () { if (SCW.on && !SCW.ride && !scRideNear()) { const o = scFishOffer(); if (o) { o.go(); return true } } return scwUseF0() };
 const scRideTickF0 = scRideTick;
 scRideTick = function (t, dt, ix, iy) { scRideTickF0(t, dt, ix, iy); const u = document.getElementById('scwuse'); if (!u || !u.hidden) return; const o = scFishOffer(); if (o) { if (u.textContent !== o.text) u.textContent = o.text; u.hidden = false } };
+
+// The catch choices sit on the fishing bar itself, so they are always in reach (the card may be hidden, and is small on a phone).
+(function () {
+  let row = null, sig = '';
+  setInterval(() => {
+    const h = document.getElementById('scfish'), main = document.getElementById('scfishbtn'); if (!h || !main) return;
+    if (!row) { row = scEl('div', 'scfhand'); row.hidden = true; h.appendChild(row) }
+    const held = SCF.st === 'hand', full = SCF.bucket.length >= SC_FISHING.bucket, s = held ? '1' + (SCF.canKeep ? 'k' : '') + (full ? 'f' : '') : '0';
+    if (s === sig) return; sig = s; row.textContent = ''; row.hidden = !held; main.style.display = held ? 'none' : '';
+    if (!held) return;
+    const a = scEl('button', 'scbtn go', 'Let It Go'); a.onclick = scFishRelease; row.appendChild(a);
+    if (SCF.canKeep) { const b = scEl('button', 'scbtn go', full ? 'Net Is Full' : 'Put It In The Net'); b.onclick = scFishKeep; row.appendChild(b) }
+  }, 200);
+})();

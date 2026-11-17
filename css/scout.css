@@ -114,3 +114,4 @@ body:has(#scfish:not([hidden])) #scwuse{bottom:calc(282px + env(safe-area-inset-
 .scout-mode #toast{font-size:12px;bottom:calc(290px + env(safe-area-inset-bottom,0px))}
 body:has(#scfish:not([hidden])) #north,body:has(#scrange:not([hidden])) #north{display:none}
 }
+.scfhand{display:flex;gap:8px}.scfhand[hidden]{display:none}.scfhand .scbtn{flex:1;min-height:46px}
