@@ -3,13 +3,13 @@
 // Nothing here changes the game: the controller drives an on-screen pointer and the farm camera,
 // and its "tap" button does exactly what a finger tap or mouse click does.
 //
-//   Left stick      move the pointer; push it past the screen edge to travel
-//   D-pad           travel around the farm
+//   Left stick      on foot: walk.  On the Map: move the pointer (push it past the screen edge to travel)
+//   D-pad           on foot: move the pointer.  On the Map: travel around the farm
 //   Right stick     turn and tilt the view (with the pointer on a long card: scroll the card)
 //   LT / RT         zoom out / zoom in            (PlayStation: L2 / R2)
 //   A               tap what the pointer is on    (PlayStation: Cross)
 //   B               Home                          (PlayStation: Circle)
-//   X               centre the pointer            (PlayStation: Square)
+//   X               use what is in front of you, or centre the pointer   (PlayStation: Square)
 //   Y               day / night                   (PlayStation: Triangle)
 //   LB / RB         step through the missions     (PlayStation: L1 / R1)
 //   Menu            jump to the card's buttons    (PlayStation: Options)
@@ -50,15 +50,15 @@
     clearTimeout(GP.helpT);
     if (!on) { help.hidden = true; return }
     const n = NAMES[GP.kind || 'xbox'], rows = [
-      ['Left stick', 'Move the pointer. Push past the screen edge to travel.'],
-      ['D-pad', 'Travel around the farm'],
+      ['Left stick', 'On foot: walk. On the Map: move the pointer.'],
+      ['D-pad', 'On foot: move the pointer. On the Map: travel.'],
       ['Right stick', 'Turn and tilt the view'],
       [n.lt + ' / ' + n.rt, 'Zoom out / zoom in'],
       [n.a, 'Tap what the pointer is on'],
       [n.b, 'Home'],
       [n.lb + ' / ' + n.rb, 'Step through the missions'],
       [n.menu, 'Jump to the card’s buttons'],
-      [n.x, 'Centre the pointer'],
+      [n.x, 'Use what is in front of you, or centre the pointer'],
       [n.y, 'Day / night'],
       [n.view, 'Show or hide this help']];
     help.textContent = '';
@@ -130,6 +130,7 @@
     requestAnimationFrame(frame);
     const dt = Math.min(0.05, t0 ? (now - t0) / 1000 : 0.016); t0 = now;
     if (!window.__ready || typeof ctrl === 'undefined' || !ctrl) return;
+    const walking = typeof SCW !== 'undefined' && SCW.on; if (typeof SCW !== 'undefined') SCW.pad = [0, 0];
     const g = pick1(); if (!g) { if (GP.shown) show(false); GP.was = []; return }
     const W = window.innerWidth, H = window.innerHeight;
     const lx = axis(g.axes[0]), ly = axis(g.axes[1]), rx = axis(g.axes[2]), ry = axis(g.axes[3]);
@@ -143,11 +144,13 @@
     }
     if (!GP.shown) { GP.was = down; return }
 
-    // pointer, and travel when it is pushed against an edge
-    let mx = dx, my = dy;
-    if (lx || ly) {
-      const v = Math.max(W, H) * 0.75 * dt, nx = GP.x + lx * v, ny = GP.y + ly * v;
-      if (nx < 4 && lx < 0 || nx > W - 4 && lx > 0) mx += lx; if (ny < 4 && ly < 0 || ny > H - 4 && ly > 0) my -= ly;
+    // on foot the left stick walks and the D-pad moves the pointer; on the Map the left stick moves the pointer and the D-pad travels
+    if (walking) SCW.pad = [lx, -ly];
+    const px = walking ? dx * 0.8 : lx, py = walking ? -dy * 0.8 : ly;
+    let mx = walking ? 0 : dx, my = walking ? 0 : dy;
+    if (px || py) {
+      const v = Math.max(W, H) * 0.75 * dt, nx = GP.x + px * v, ny = GP.y + py * v;
+      if (!walking) { if (nx < 4 && lx < 0 || nx > W - 4 && lx > 0) mx += lx; if (ny < 4 && ly < 0 || ny > H - 4 && ly > 0) my -= ly }
       GP.x = Math.min(W - 4, Math.max(4, nx)); GP.y = Math.min(H - 4, Math.max(4, ny)); place();
     }
     let moved = false;
@@ -171,7 +174,7 @@
     // buttons (acted on once per press)
     if (hit(0)) tap();
     if (hit(1) && typeof scHome === 'function') scHome();
-    if (hit(2)) { GP.x = W / 2; GP.y = H / 2; place() }
+    if (hit(2)) { if (walking && typeof scwUse === 'function' && scwUse()) { } else { GP.x = W / 2; GP.y = H / 2; place() } }
     if (hit(3) && typeof setTime === 'function') setTime(NIGHT > 0.5 ? 15 : 22.5);
     if (hit(4)) stepMission(-1);
     if (hit(5)) stepMission(1);
