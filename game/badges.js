@@ -36,7 +36,7 @@ function scBadgeCard() {
 }
 function scParents() {
   scCard('For Parents', ['Suitable for all ages. Made for Scouts visiting the farm.',
-    { list: ['Nothing violent. The paintball, BB gun and archery ranges shoot at targets only (paper, round targets and foam animal targets), never at people or real animals, and open with the range safety rules. Fishing is catch and release.',
+    { list: ['Nothing violent. The paintball, BB gun and archery ranges shoot at targets only (paper, round targets and foam animal targets), never at people or real animals, and open with the range safety rules. Fishing is catch and release: a fish goes straight back, or waits alive in a keep net in the water and is let go when the patrol is done.',
       'A cartoon bear roams the farm. If it reaches a Scout on foot it takes some play tokens and wanders off. Nobody is hurt, and a class teaches how Bear Spray is really used.',
       'No ads, no purchases, no chat, no accounts and no links to other websites.',
       'The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.',

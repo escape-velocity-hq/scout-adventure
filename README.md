@@ -84,8 +84,10 @@ Fishing is in first person, from the bank of any pond or from the lower or upper
 - **Wait:** the fish are the ones swimming in the pond. The nearest one notices the lure and swims to it. Holding the button reels the lure slowly in.
 - **Strike:** when it bites, press to set the hook.
 - **Fight:** hold to reel, let go to give line. A fish's pull comes from its weight, worked out from its length. It runs and rests. Reel against a strong run and the tension passes what the line can take and it snaps; leave the line slack and the hook pulls out; let it take all 45 metres of line and it breaks off. Tension tires the fish.
+- **Land:** the fish is lifted out of the water on the line. Let it go, or put it in the keep net: a hoop and mesh bag standing in the water, where up to five fish wait alive and can be seen swimming. Emptying the net, or finishing, lets them all go. Trophies and monsters always go straight back.
+- **On the move:** with the line in, the Scout walks the bank at full pace with the rod. With the line out or a fish on, they can take slow steps any way, and they turn with the fish by themselves.
 
-Tackle changes the physics: Live Bait doubles how far away a fish notices the lure, Braided Line takes 1.8 times the tension, and the Heavy Rod reels 35 percent harder. All the numbers are in `SC_FISHING` at the top of `game/fishing.js`.
+Tackle changes the physics: Live Bait doubles how far away a fish notices the lure, Braided Line takes about 1.7 times the tension, and the Heavy Rod reels 35 percent harder. All the numbers are in `SC_FISHING` at the top of `game/fishing.js`.
 
 ## Trophy Fish
 
@@ -134,7 +136,7 @@ Patrol name, troop number, each patrol's best score per mission, its biggest cat
 
 Suitable for all ages. This is the farm's own description, not an official ESRB or PEGI rating.
 
-- Nothing violent. The paintball, BB gun and archery ranges shoot at targets only (paper, round targets and foam animal targets), never at people or real animals, and open with the range safety rules. Fishing is catch and release.
+- Nothing violent. The paintball, BB gun and archery ranges shoot at targets only (paper, round targets and foam animal targets), never at people or real animals, and open with the range safety rules. Fishing is catch and release: a fish goes straight back, or waits alive in a keep net in the water and is let go when the patrol is done.
 - A cartoon bear roams the farm. If it reaches a Scout on foot it takes some play tokens and wanders off. Nobody is hurt, and a class teaches how Bear Spray is really used.
 - No ads, no purchases, no chat, no accounts and no links to other websites.
 - The tokens are play money, earned by playing. They cannot be bought and are not worth real money. The snacks and tackle they buy exist only in the game.

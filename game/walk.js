@@ -102,7 +102,7 @@ function scwKey(e) { const pad = { Numpad8: 'ArrowUp', Numpad2: 'ArrowDown', Num
 function scwWantsToWalk(k) {
   if (SCW.on || !SCW.ready) return; const fishing = typeof SCF !== 'undefined' && SCF.on, ranging = typeof SCR !== 'undefined' && SCR.on;
   if (ranging && /^Arrow/.test(k)) return;      // on a range the arrow keys aim
-  if (SC.cur) { const now = performance.now(); if (now - (SCW.told || 0) > 4000) { SCW.told = now; if (fishing && !SCF.deck && SCF.st === 'idle') return; toast(fishing ? (SCF.deck ? 'You are on the deck. Press Done Fishing (or Home) to walk again.' : 'Your line is out. Reel in first, then you can walk with the rod.') : ranging ? 'You are on the firing line. Press Done (or Home) to walk again.' : 'This mission is played from above. Press Home to walk again.') } return }
+  if (SC.cur) { const now = performance.now(); if (now - (SCW.told || 0) > 4000) { SCW.told = now; if (fishing && !SCF.deck) return; toast(fishing ? 'You are on the deck. Press Done Fishing (or Home) to walk again.' : ranging ? 'You are on the firing line. Press Done (or Home) to walk again.' : 'This mission is played from above. Press Home to walk again.') } return }
   if (!scAvatar()) return; SCW.want = true; scwEnter();
 }
 window.addEventListener('keydown', e => { if (/^(INPUT|TEXTAREA|SELECT)$/.test((e.target && e.target.tagName) || '')) return; const k = scwKey(e); SCW.keys[k] = true; if (/^(w|a|s|d|ArrowUp|ArrowDown|ArrowLeft|ArrowRight)$/.test(k)) scwWantsToWalk(k); if (SCW.on && /^Arrow/.test(k)) e.preventDefault(); if (SCW.on && k === 'e' && typeof scwUse === 'function') scwUse() });

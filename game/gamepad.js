@@ -131,7 +131,7 @@
     const dt = Math.min(0.05, t0 ? (now - t0) / 1000 : 0.016); t0 = now;
     if (!window.__ready || typeof ctrl === 'undefined' || !ctrl) return;
     const fishing = typeof SCF !== 'undefined' && SCF.on;
-    const walking = typeof SCW !== 'undefined' && (SCW.on || fishing && !SCF.deck && SCF.st === 'idle'); if (typeof SCW !== 'undefined') SCW.pad = [0, 0];
+    const walking = typeof SCW !== 'undefined' && (SCW.on || fishing && !SCF.deck); if (typeof SCW !== 'undefined') SCW.pad = [0, 0];
     const fishing_ = fishing; if (typeof SCF !== 'undefined') SCF.pad = false;
     const ranging = typeof SCR !== 'undefined' && SCR.on; if (typeof SCR !== 'undefined') SCR.pad = false;
     const g = pick1(); if (!g) { if (GP.shown) show(false); GP.was = []; return }
