@@ -20,6 +20,43 @@ It runs in a web browser on a phone, tablet or laptop. Nothing to install.
 
 Every mission earns points for the patrol that is playing. The Scoreboard ranks the patrols.
 
+## Controllers
+
+Plug in or pair an Xbox or PlayStation controller and press any button. A yellow pointer appears and a help card lists the buttons.
+
+| Xbox | PlayStation | What It Does |
+|---|---|---|
+| Left stick | Left stick | Move the pointer. Push past the screen edge to travel. |
+| D-pad | D-pad | Travel around the farm |
+| Right stick | Right stick | Turn and tilt the view |
+| LT / RT | L2 / R2 | Zoom out / zoom in |
+| A | Cross | Tap what the pointer is on |
+| B | Circle | Home |
+| LB / RB | L1 / R1 | Step through the missions |
+| Menu | Options | Jump to the card's buttons |
+| X | Square | Centre the pointer |
+| Y | Triangle | Day / night |
+| View | Create | Show or hide the help |
+
+Touch and mouse keep working; moving the mouse or touching the screen puts the pointer away. Typing a patrol name still needs the keyboard or the screen.
+
+## Badges
+
+Each mission has a badge, earned the first time a patrol scores in it. The Home card shows how many the patrol holds, and the Badges card shows all ten and the patrol's standing (Trail Scout, Farm Ranger, Pond Master, Basserie Legend). These are the farm's own badges, not Scouting America ranks or merit badges.
+
+## What Is Saved
+
+Patrol name, troop number, each patrol's best score per mission, and its badges are kept in the browser on that device. They are still there after the page is closed. A half-played mission is not saved. Nothing is shared between devices.
+
+## For Parents
+
+Suitable for all ages. This is the farm's own description, not an official ESRB or PEGI rating.
+
+- Nothing violent or scary. The paintball range is pop-up targets only, never people or animals. Fishing is catch and release.
+- No ads, no purchases, no chat, no accounts and no links to other websites.
+- Nothing a child types is sent anywhere. Patrol names, scores and badges stay in the browser on that device.
+- The page loads its 3D library and its lettering from two public services (cdnjs and Google Fonts). Like any website, they see the device's internet address.
+
 ## Run It On Your Computer
 
 The page loads its data with `fetch`, so it must be opened through a web server, not by double-clicking the file.
@@ -53,6 +90,8 @@ game/missions-explore.js   Scavenger Hunt, Compass Course, Follow The Raindrop, 
 game/missions-water-sky.js Catch A Bass, Night Sky Hunt
 game/missions-camp-fire.js Pitch Your Camp, Fire Class With Ember The Owl
 game/missions-games.js     Paintball Range, Horseshoes
+game/badges.js             one badge per mission, the Badges card, the For Parents card
+game/gamepad.js            Xbox and PlayStation controllers
 scene.json, ground_tex.jpg the farm itself (generated from the farm model; do not edit by hand)
 ```
 
