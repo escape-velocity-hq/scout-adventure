@@ -93,4 +93,24 @@ body:has(#scfish:not([hidden])) #scwstick,body:has(#scrange:not([hidden])) #scws
 body:has(#scfish:not([hidden])) #scwuse{bottom:calc(322px + env(safe-area-inset-bottom,0px))}
 .scout-mode #north{bottom:calc(60px + env(safe-area-inset-bottom,0px))}
 .scout-mode #toast{top:auto;bottom:calc(330px + env(safe-area-inset-bottom,0px))}
+#sccard{max-height:28vh;width:auto;right:auto;max-width:min(330px,calc(100vw - 20px));padding:8px 10px;font-size:12.5px;line-height:1.3;border-radius:12px}
+#sccard h2{font-size:14px;margin-bottom:2px}
+#sccard p{margin:4px 0}
+.scbtn{min-height:36px;padding:5px 10px;font-size:13px;border-radius:10px}
+#sccard .scclose,#sccard .schide{width:30px;height:30px;font-size:18px;margin:-2px -4px 0 6px}
+.scavatars{gap:4px;margin-top:6px}
+.scavatar{padding:3px 2px;font-size:11px;min-height:0}
+.scavataricon{font-size:20px}
+#scfish,#scrange{width:min(300px,calc(100vw - 24px));gap:4px}
+.scfsay{font-size:12px;padding:4px 8px}
+.scfbar{height:12px}
+#scfishbtn,#scrangebtn{min-height:46px}
+#scwstick{width:96px;height:96px;left:calc(50% - 48px)!important}
+body:has(#scfish:not([hidden])) #scwstick,body:has(#scrange:not([hidden])) #scwstick{bottom:calc(176px + env(safe-area-inset-bottom,0px))}
+.scw-on #scwuse,#scwuse{bottom:calc(176px + env(safe-area-inset-bottom,0px))}
+body:has(#scfish:not([hidden])) #scwuse{bottom:calc(282px + env(safe-area-inset-bottom,0px))}
+.scgames-open #scbar{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+#scmenu{min-height:34px}
+.scout-mode #toast{font-size:12px;bottom:calc(290px + env(safe-area-inset-bottom,0px))}
+body:has(#scfish:not([hidden])) #north,body:has(#scrange:not([hidden])) #north{display:none}
 }
