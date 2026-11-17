@@ -20,6 +20,8 @@ function scLandmarks() {
     add(new THREE.BoxGeometry(0.85, 1.7, 0.06), L.door, 0, 0.85, L.d / 2 + 0.02);
     g.position.set(L.x, scY(L.x, L.z) - 0.05, L.z); g.rotation.y = L.rot; scene.add(g); L.obj = g;
   }
+  // the game does not show the yellow drive route, its dashed alternative or the blue parking pad (the P sign stays)
+  try { for (const o of routeObjs) if (o && !o.isSprite && !(o.geometry && o.geometry.type === 'CylinderGeometry')) o.visible = false } catch (e) { }
   if (typeof SCW !== 'undefined') SCW.solids = null;      // walking: count the new buildings as solid
   try { shadowDirty = true } catch (e) { }
 }
