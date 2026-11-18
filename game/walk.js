@@ -147,3 +147,22 @@ scInit = function () {
 // the welcome banner at the Fishing Lounge gets the date under it
 const scWelcomeW0 = scWelcome;
 scWelcome = function () { scWelcomeW0(); if (!SC.banner) return; const l = scLabel('SEE YOU NOV 29', '#f2c230'); l.scale.set(12, 2.25, 1); l.position.y = 6.6; SC.banner.add(l) };
+
+// The Map view never dips under the farm: the tilt stops a little above the horizon, the point it circles stays on the ground,
+// and the camera itself is lifted clear of any hill it would otherwise pass through.
+(function scKeepAbove() {
+  if (typeof ctrl === 'undefined' || !ctrl || !ctrl.update) return setTimeout(scKeepAbove, 300);
+  const up0 = ctrl.update.bind(ctrl), MAXPHI = Math.PI / 2 - 0.14, CLEAR = 2.5;
+  const gnd = (x, z) => { try { const g = groundAt(x, z); return isFinite(g) ? g : null } catch (e) { return null } };
+  ctrl.update = function () {
+    if (!this.walk) {
+      if (this.sph.phi > MAXPHI) this.sph.phi = MAXPHI;
+      const g = gnd(this.target.x, this.target.z); if (g !== null && this.target.y < g) this.target.y = g;
+    }
+    up0();
+    if (!this.walk) {
+      const p = this.cam.position, c = gnd(p.x, p.z);
+      if (c !== null && p.y < c + CLEAR) { p.y = c + CLEAR; this.cam.lookAt(this.target) }
+    }
+  };
+})();
